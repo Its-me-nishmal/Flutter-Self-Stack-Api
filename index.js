@@ -1,5 +1,9 @@
-const express = require('express')
+import connect from './database/connect.js'
+import express from 'express'
 const app = express()
+
+connect()
+import userRoutes from './routes.js/user.js';
 const PORT = 4004
 
 
@@ -7,10 +11,10 @@ app.get('/home', (req, res) => {
   res.status(200).json('Welcome, your app is working well');
 })
 
-
+app.use('/api/users', userRoutes);
 app.listen(PORT, () => {
   console.log(`Server running at http://localhost:${PORT}`);
 });
 
 // Export the Express API
-module.exports = app
+export default app;
