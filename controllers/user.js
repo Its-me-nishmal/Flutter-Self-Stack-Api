@@ -37,7 +37,7 @@ const userDelAll = async (req, res, next) => {
 
 const userCreate = async (req, res, next) => {
     try {
-        console.log(req.body);
+        console.log(req.body)
         const newUser = new User({ ...req.body });
         const savedUser = await newUser.save();
         res.status(OK).json(savedUser);
