@@ -19,7 +19,6 @@
     "colors": "^1.4.0",
     "dotenv": "^16.3.1",
     "express": "^4.18.2",
-    "express-ip": "^1.0.4",
     "gradient-string": "^2.0.2",
     "http-status": "^1.7.3",
     "jsonwebtoken": "^9.0.2",

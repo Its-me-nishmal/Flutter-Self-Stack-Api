@@ -4,7 +4,6 @@ import color from "colors"
 import axios from 'axios';
 import { v4 as uuidv4 } from 'uuid';
 import bodyParser from 'body-parser';
-import expressIp from 'express-ip';
 import apiKey from './middleware/apiKey.js';
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/prodect.js';
@@ -14,7 +13,6 @@ const app = express();
 connect()
 
 app.use(bodyParser.json());
-app.use(expressIp().getIpInfoMiddleware)
 app.use('/api', apiKey);
 app.use('/api/users', userRoutes);
 app.use('/api/products', productRoutes);
