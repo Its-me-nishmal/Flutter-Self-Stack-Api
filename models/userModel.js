@@ -3,12 +3,13 @@ import { v4  as uuidv4 } from 'uuid'
 import bcrypt from "bcrypt"
 
 const userSchema = new mongoose.Schema({
-    _id: { type: String, default: ()=> `seeds-${ uuidv4() }`, required : true},
+    _id: { type: String, default: ()=> `sefl-stack-${ uuidv4() }`, required : true},
     username: { type: String },
     email: { type: String, unique: true },
     name: { type: String },
     password: { type: String },
-    phone: { type: Number, unique: true }
+    phone: { type: Number, unique: true },
+    roll: { type: String, default: "Student" }
 });
 
 userSchema.pre('save', async function (next) {
