@@ -3,6 +3,10 @@ import mongoose from 'mongoose';
 import User from '../models/userModel.js';
 import httpStatus from 'http-status';
 import jwt from "jsonwebtoken";
+import crypto from 'crypto';
+import nodemailer from 'nodemailer';
+import dotenv from "dotenv";
+
 
 const { OK, INTERNAL_SERVER_ERROR } = httpStatus;
 
@@ -84,28 +88,104 @@ const userUpdateMultiple = async (req, res, next) => {
 
 const signIn = async (req, res, next) => {
     try {
-      const { email, password } = req.body;
-  
-      const user = await User.findOne({ email });
-  
-      if (!user) {
-        return res.status(401).json({ error: 'Invalid username or password' });
-      }
-  
-      const isPasswordValid = await user.comparePassword(password);
-  
-      if (!isPasswordValid) {
-        return res.status(401).json({ error: 'Invalid username or password' });
-      }
-  
-      const token = jwt.sign({ userId: user._id }, 'this-for-fself-stack-api', { expiresIn: '1h' });
-  
-      res.json({ token, userId: user._id });
+        const { email, password } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
+
+        const isPasswordValid = await user.comparePassword(password);
+
+        if (!isPasswordValid) {
+            return res.status(401).json({ error: 'Invalid username or password' });
+        }
+
+        const token = jwt.sign({ userId: user._id }, 'this-for-self-stack-api', { expiresIn: '1h' });
+
+        res.json({ token, userId: user._id });
     } catch (error) {
-      console.error(error);
-      res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+        console.error(error);
+        res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
     }
-  };
+};
+
+const generateOTP = () => {
+    return crypto.randomBytes(4).toString('hex').toUpperCase();
+};
+
+const sendOTPEmail = async (email, otp) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    // Send email with OTP
+    await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Password Reset OTP',
+        text: `Your OTP for password reset is: ${otp}`
+    });
+};
+
+const forgotPassword = async (req, res, next) => {
+    try {
+        const { email } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        // Generate OTP
+        const otp = generateOTP();
+
+        // Store OTP in the database
+        user.passwordResetOTP = otp;
+        user.passwordResetExpires = Date.now() + 3600000; 
+        await user.save();
+
+        // Send OTP via email
+        await sendOTPEmail(email, otp);
+
+        res.status(OK).json({ message: 'Password reset OTP sent successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    }
+};
+
+const resetPassword = async (req, res, next) => {
+    try {
+        const { email, otp, newPassword } = req.body;
+
+        const user = await User.findOne({ email });
+
+        if (!user) {
+            return res.status(404).json({ error: 'User not found' });
+        }
+
+        if (user.passwordResetOTP !== otp || user.passwordResetExpires < Date.now()) {
+            return res.status(401).json({ error: 'Invalid or expired OTP' });
+        }
+
+        user.password = newPassword;
+        user.passwordResetOTP = undefined;
+        user.passwordResetExpires = undefined;
+        await user.save();
+
+        res.status(OK).json({ message: 'Password reset successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+    }
+};
 
 export default {
     userGet,
@@ -116,5 +196,7 @@ export default {
     userUpdate,
     userCreateMultiple,
     userUpdateMultiple,
-    signIn
+    signIn,
+    forgotPassword,
+    resetPassword,
 };

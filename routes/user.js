@@ -11,6 +11,8 @@ router.post('/', userController.userCreate);
 router.put('/:id', userController.userUpdate);
 router.post('/multiple', userController.userCreateMultiple);
 router.put('/multiple', userController.userUpdateMultiple);
-router.post('/signin',userController.signIn)
+router.post('/signin',userController.signIn);
+router.post('/forgot-password', userController.forgotPassword);
+router.post('/reset-password', userController.resetPassword);
 
 export default router;
