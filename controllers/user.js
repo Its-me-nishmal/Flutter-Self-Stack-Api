@@ -98,7 +98,7 @@ const signIn = async (req, res, next) => {
         return res.status(401).json({ error: 'Invalid username or password' });
       }
   
-      const token = jwt.sign({ userId: user._id }, 'this-for-seeds-api', { expiresIn: '1h' });
+      const token = jwt.sign({ userId: user._id }, 'this-for-fself-stack-api', { expiresIn: '1h' });
   
       res.json({ token, userId: user._id });
     } catch (error) {
