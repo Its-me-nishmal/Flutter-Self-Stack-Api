@@ -211,9 +211,6 @@ const updatePassword = async (req, res, next) => {
     }
 };
 
-// Example usage in your Express app
-app.post('/update-password', updatePassword);
-
 
 
 export default {
