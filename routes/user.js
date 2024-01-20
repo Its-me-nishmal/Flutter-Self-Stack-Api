@@ -13,6 +13,8 @@ router.post('/multiple', userController.userCreateMultiple);
 router.put('/multiple', userController.userUpdateMultiple);
 router.post('/signin',userController.signIn);
 router.post('/forgot-password', userController.forgotPassword);
-router.post('/reset-password', userController.resetPassword);
+router.post('/updatePassword', userController.updatePassword);
+router.post('/verifyOTP',userController.verifyOTP);
+
 
 export default router;

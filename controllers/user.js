@@ -111,9 +111,11 @@ const signIn = async (req, res, next) => {
     }
 };
 
-const generateOTP = () => {
-    return crypto.randomBytes(4).toString('hex').toUpperCase();
-};
+function generateOTP () {
+    const randomBytes = crypto.randomBytes(3); 
+    const otp = parseInt(randomBytes.toString('hex'), 16).toString().slice(0, 6);
+    return otp;
+  }
 
 const sendOTPEmail = async (email, otp) => {
     const transporter = nodemailer.createTransport({
@@ -161,9 +163,9 @@ const forgotPassword = async (req, res, next) => {
     }
 };
 
-const resetPassword = async (req, res, next) => {
+const verifyOTP = async (req, res, next) => {
     try {
-        const { email, otp, newPassword } = req.body;
+        const { email, otp } = req.body;
 
         const user = await User.findOne({ email });
 
@@ -175,17 +177,44 @@ const resetPassword = async (req, res, next) => {
             return res.status(401).json({ error: 'Invalid or expired OTP' });
         }
 
+        // Attach the user object to the response for later use in the 'updatePassword' route
+        res.locals.user = user;
+
+        res.status(200).json({ message: 'OTP verified successfully' });
+    } catch (error) {
+        console.error(error);
+        res.status(500).json({ error: 'Internal Server Error' });
+    }
+};
+
+const updatePassword = async (req, res, next) => {
+    try {
+        // Access the user object attached by the 'verifyOTP' route
+        const user = res.locals.user;
+
+        // Ensure that the user object exists
+        if (!user) {
+            return res.status(400).json({ error: 'OTP verification not performed' });
+        }
+
+        const { newPassword } = req.body;
+
         user.password = newPassword;
         user.passwordResetOTP = undefined;
         user.passwordResetExpires = undefined;
         await user.save();
 
-        res.status(OK).json({ message: 'Password reset successfully' });
+        res.status(200).json({ message: 'Password reset successfully' });
     } catch (error) {
         console.error(error);
-        res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+        res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
+// Example usage in your Express app
+app.post('/update-password', updatePassword);
+
+
 
 export default {
     userGet,
@@ -198,5 +227,6 @@ export default {
     userUpdateMultiple,
     signIn,
     forgotPassword,
-    resetPassword,
+    verifyOTP,
+    updatePassword
 };
