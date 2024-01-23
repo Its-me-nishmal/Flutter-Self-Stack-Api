@@ -41,14 +41,28 @@ const userDelAll = async (req, res, next) => {
 
 const userCreate = async (req, res, next) => {
     try {
-        console.log(req.body)
+        const { email } = req.body;
+
+        // Check if the email already exists in the database
+        const existingUser = await User.findOne({ email });
+
+        if (existingUser) {
+            // If the email already exists, return a conflict status
+            return res.status(409).json({ error: 'Email already exists' });
+        }
+
+        // If the email doesn't exist, create a new user
         const newUser = new User({ ...req.body });
         const savedUser = await newUser.save();
-        res.status(OK).json(savedUser);
+
+        // Return the newly created user
+        res.status(200).json(savedUser);
     } catch (err) {
+        // Pass any errors to the error-handling middleware
         next(err);
     }
-}
+};
+
 
 const userCreateMultiple = async (req, res, next) => {
     try {
