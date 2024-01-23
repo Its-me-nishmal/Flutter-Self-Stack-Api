@@ -189,16 +189,22 @@ const verifyOTP = async (req, res, next) => {
 
 const updatePassword = async (req, res, next) => {
     try {
-        // Access the user object attached by the 'verifyOTP' route
-        const user = res.locals.user;
+        const { email, newPassword } = req.body;
 
-        // Ensure that the user object exists
+        // Find the user by email
+        const user = await User.findOne({ email });
+
+        // Ensure that the user exists
         if (!user) {
-            return res.status(400).json({ error: 'OTP verification not performed' });
+            return res.status(404).json({ error: 'User not found' });
         }
 
-        const { newPassword } = req.body;
+        // Check if the user has completed OTP verification
+        if (!user.passwordResetOTP || !user.passwordResetExpires || user.passwordResetExpires < Date.now()) {
+            return res.status(400).json({ error: 'OTP verification not performed or expired' });
+        }
 
+        // Update the password and reset OTP-related fields
         user.password = newPassword;
         user.passwordResetOTP = undefined;
         user.passwordResetExpires = undefined;
@@ -210,6 +216,7 @@ const updatePassword = async (req, res, next) => {
         res.status(500).json({ error: 'Internal Server Error' });
     }
 };
+
 
 
 
