@@ -7,7 +7,8 @@ import bodyParser from 'body-parser';
 import apiKey from './middleware/apiKey.js';
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/prodect.js';
-import { errorHandler } from './middleware/err.js'
+import { errorHandler } from './middleware/err.js';
+import taskRoutes from './routes/dashboard.js'
 
 const app = express();
 connect()
@@ -15,6 +16,7 @@ connect()
 app.use(bodyParser.json());
 app.use('/api', apiKey);
 app.use('/api/users', userRoutes);
+app.use('/api/tasks', taskRoutes)
 app.use('/api/products', productRoutes);
 app.use(errorHandler);
 

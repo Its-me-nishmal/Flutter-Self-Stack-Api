@@ -3,7 +3,7 @@ import { v4  as uuidv4 } from 'uuid'
 import bcrypt from "bcrypt"
 
 const userSchema = new mongoose.Schema({
-    _id: { type: String, default: ()=> `sefl-stack-${ uuidv4() }`, required : true},
+    _id: { type: String, default: ()=> `self-stack-user-${ uuidv4() }`, required : true},
     username: { type: String },
     email: { type: String, unique: true },
     name: { type: String },
@@ -12,7 +12,7 @@ const userSchema = new mongoose.Schema({
     passwordResetOTP : { type: String },
     passwordResetExpires : { type: Date },
     roll: { type: String, default: "Student" }
-});
+}, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();

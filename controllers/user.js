@@ -116,12 +116,12 @@ const signIn = async (req, res, next) => {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
 
-        const token = jwt.sign({ userId: user._id }, 'this-for-self-stack-api', { expiresIn: '1h' });
+        const token = jwt.sign({ userId: user._id, userRoll: user.roll }, 'this-for-self-stack-api', { expiresIn: '1h' })
 
         res.json({ token, userId: user._id });
     } catch (error) {
         console.error(error);
-        res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+        next(error)
     }
 };
 
@@ -173,7 +173,7 @@ const forgotPassword = async (req, res, next) => {
         res.status(OK).json({ message: 'Password reset OTP sent successfully' });
     } catch (error) {
         console.error(error);
-        res.status(INTERNAL_SERVER_ERROR).json({ error: 'Internal Server Error' });
+        next(error)
     }
 };
 
@@ -197,7 +197,7 @@ const verifyOTP = async (req, res, next) => {
         res.status(200).json({ message: 'OTP verified successfully' });
     } catch (error) {
         console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error)
     }
 };
 
@@ -218,7 +218,6 @@ const updatePassword = async (req, res, next) => {
             return res.status(400).json({ error: 'OTP verification not performed or expired' });
         }
 
-        // Update the password and reset OTP-related fields
         user.password = newPassword;
         user.passwordResetOTP = undefined;
         user.passwordResetExpires = undefined;
@@ -226,8 +225,7 @@ const updatePassword = async (req, res, next) => {
 
         res.status(200).json({ message: 'Password reset successfully' });
     } catch (error) {
-        console.error(error);
-        res.status(500).json({ error: 'Internal Server Error' });
+        next(error)
     }
 };
 
