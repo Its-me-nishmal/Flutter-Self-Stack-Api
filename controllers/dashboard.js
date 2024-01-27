@@ -27,22 +27,21 @@ const taskGetAll = async (req, res, next) => {
 
 const taskCreate = async (req, res, next) => {
     try {
-        const { userId, title, description, content, completed } = req.body;
+        const { course_name, students, tasks } = req.body;
 
-        const newTask = new TaskModel({
-            userId,
-            title,
-            description,
-            content,
-            completed,
+        const newCourse = new TaskModel({
+            course_name,
+            students,
+            tasks,
         });
 
-        const savedTask = await newTask.save();
-        res.status(CREATED).json(savedTask);
+        const savedCourse = await newCourse.save();
+        res.status(CREATED).json(savedCourse);
     } catch (error) {
         next(error);
     }
 };
+
 
 const taskUpdate = async (req, res, next) => {
     try {

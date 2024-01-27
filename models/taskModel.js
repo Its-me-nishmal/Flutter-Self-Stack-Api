@@ -1,15 +1,26 @@
-// taskModel.js
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
 const Schema = mongoose.Schema;
 
-const taskSchema = new Schema({
-    _id: { type: String, default: () => `self-stack-task-${uuidv4()}` },
-    userId: { type: String, ref: 'User', required: true },
-    title: { type: String, required: true },
-    description: { type: String },
-    content: { type: String },
-    completed: { type: Boolean, default: false }
-}, { timestamps: true });
+const SubtitleSchema = new Schema({
+  subtitle_name: { type: String, required: true },
+  points: [{ type: String, required: true }]
+});
 
-export const TaskModel = mongoose.model('Task', taskSchema);
+// Task schema
+const TaskSchema = new Schema({
+  task_name: { type: String, required: true },
+  title: { type: String, required: true },
+  duration: { type: String, required: true },
+  subtitle: [SubtitleSchema]
+});
+
+// Course schema
+const CourseSchema = new Schema({
+    _id: { type: String, required: true, default:()=>`self-stack-courses-${ uuidv4() }`},
+  course_name: { type: String, required: true },
+  students: [{ type: String, required: true }],
+  tasks: [TaskSchema]
+});
+
+export const TaskModel = mongoose.model('Task', CourseSchema);
