@@ -5,7 +5,7 @@ const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
     id: { type: String, default: () => `self-stack-task-${uuidv4()}` },
-    userId: { type: mongoose.Schema.Types.ObjectId, ref: 'User', required: true },
+    userId: { type: String, ref: 'User', required: true },
     title: { type: String, required: true },
     description: { type: String },
     content: { type: String },
