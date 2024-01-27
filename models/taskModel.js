@@ -4,7 +4,7 @@ import { v4 as uuidv4 } from 'uuid';
 const Schema = mongoose.Schema;
 
 const taskSchema = new Schema({
-    id: { type: String, default: () => `self-stack-task-${uuidv4()}` },
+    _id: { type: String, default: () => `self-stack-task-${uuidv4()}` },
     userId: { type: String, ref: 'User', required: true },
     title: { type: String, required: true },
     description: { type: String },
