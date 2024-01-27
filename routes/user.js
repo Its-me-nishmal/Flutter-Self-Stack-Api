@@ -1,9 +1,10 @@
 import express from 'express';
 import userController from '../controllers/user.js';
+import auth from './middleware/auth.js'
 
 const router = express.Router();
 
-router.get('/:id', userController.userGet);
+router.get('/:id',auth, userController.userGet);
 router.get('/', userController.userGetAll);
 router.delete('/:id', userController.userDel);
 router.delete('/', userController.userDelAll);
