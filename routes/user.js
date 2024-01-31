@@ -16,6 +16,7 @@ router.post('/signin',userController.signIn);
 router.post('/forgot-password', userController.forgotPassword);
 router.post('/updatePassword', userController.updatePassword);
 router.post('/verifyOTP',userController.verifyOTP);
+router.post('/loginGoogle',userController.loginWithGoogle)
 
 
 export default router;
