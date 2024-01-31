@@ -104,6 +104,24 @@ const taskUpdateMultiple = async (req, res, next) => {
     }
 };
 
+const getUserTasks = async (req, res, next) => {
+    try {
+        const userId = req.params.userId;
+
+        // Assuming you have a user model with the ID stored in the 'students' array
+        const userTasks = await TaskModel.find({ 'students': userId });
+
+        if (!userTasks) {
+            return res.status(NOT_FOUND).json({ error: 'User tasks not found' });
+        }
+
+        res.status(OK).json(userTasks);
+    } catch (err) {
+        // Pass any errors to the error-handling middleware
+        next(err);
+    }
+};
+
 export default {
     taskGet,
     taskGetAll,
@@ -113,4 +131,5 @@ export default {
     taskDelAll,
     taskCreateMultiple,
     taskUpdateMultiple,
+    getUserTasks
 };

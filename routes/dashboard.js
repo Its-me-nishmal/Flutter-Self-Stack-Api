@@ -11,5 +11,6 @@ router.post('/', taskController.taskCreate);
 router.put('/:id', taskController.taskUpdate);
 router.post('/multiple', taskController.taskCreateMultiple);
 router.put('/multiple', taskController.taskUpdateMultiple);
+router.get('/user/:userId', taskController.getUserTasks)
 
 export default router;
