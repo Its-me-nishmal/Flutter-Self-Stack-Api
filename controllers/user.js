@@ -232,6 +232,7 @@ const updatePassword = async (req, res, next) => {
 
 const loginWithGoogle = async (req, res, next) => {
     try {
+        console.log(req.body);
         const { email, name, googleId } = req.body;
 
         // Check if the email already exists in the database
