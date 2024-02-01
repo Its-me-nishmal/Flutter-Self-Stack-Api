@@ -2,19 +2,32 @@ import mongoose from "mongoose";
 import { v4  as uuidv4 } from 'uuid'
 import bcrypt from "bcrypt"
 
-const userSchema = new mongoose.Schema({
-    _id: { type: String, default: ()=> `self-stack-user-${ uuidv4() }`, required : true},
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
+    _id: { type: String, default: () => `self-stack-user-${uuidv4()}`, required: true },
     username: { type: String },
     email: { type: String, unique: true },
     name: { type: String },
     password: { type: String },
     phone: { type: Number, unique: true },
-    passwordResetOTP : { type: String },
-    passwordResetExpires : { type: Date },
+    passwordResetOTP: { type: String },
+    passwordResetExpires: { type: Date },
     roll: { type: String, default: "Student" },
-    profile:{type:String},
-    googleId:{type:String}
+    profile: { type: String },
+    googleId: { type: String },
+    tasksStarted: [{ taskId: { type: String }, date: { type: Date, default: Date.now } }],
+    tasksCompleted: [{ taskId: { type: String }, date: { type: Date } }]
 }, { timestamps: true });
+
+// Set a default task for the tasksStarted array
+userSchema.pre('save', function (next) {
+    if (!this.tasksStarted || this.tasksStarted.length === 0) {
+        // Set default task (replace 'defaultTaskId' with the actual ID of the default task)
+        this.tasksStarted.push({ taskId: 'self-stack-user-482c1866-fc46-4ee5-957b-1c88febde4d7' });
+    }
+    next();
+});
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
