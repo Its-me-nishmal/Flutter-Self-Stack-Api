@@ -1,6 +1,6 @@
 import mongoose from "mongoose";
-import { v4  as uuidv4 } from 'uuid'
-import bcrypt from "bcrypt"
+import { v4 as uuidv4 } from 'uuid';
+import bcrypt from "bcrypt";
 
 const Schema = mongoose.Schema;
 
@@ -20,13 +20,9 @@ const userSchema = new Schema({
     tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
 }, { timestamps: true });
 
-
-
-
 // Set a default task for the tasksStarted array
 userSchema.pre('save', function (next) {
     if (!this.tasksStarted || this.tasksStarted.length === 0) {
-        // Set default task (replace 'defaultTaskId' with the actual ID of the default task)
         this.tasksStarted.push({ taskId: mongoose.Types.ObjectId('65b4dcbf99ed8f5bfb782a9e') });
     }
     next();
@@ -37,15 +33,15 @@ userSchema.pre('save', async function (next) {
     try {
         const hashpass = await bcrypt.hash(this.password, 10);
         this.password = hashpass;
-        next()
+        next();
     } catch (error) {
-        next(error)
+        next(error);
     }
-})
+});
 
-userSchema.methods.comparePassword = async function (pass){
-    return bcrypt.compare(pass,this.password)
-}
+userSchema.methods.comparePassword = async function (pass) {
+    return bcrypt.compare(pass, this.password);
+};
 
 const User = mongoose.model('User', userSchema);
 
