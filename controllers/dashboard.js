@@ -108,10 +108,41 @@ const getUserTasks = async (req, res, next) => {
     try {
         const userId = req.params.userId;
 
-        // Assuming you have a user model with the ID stored in the 'students' array
-        const userTasks = await TaskModel.find({ 'students': userId });
+        // Use aggregation to get user tasks along with user data
+        const userTasks = await TaskModel.aggregate([
+            {
+                $match: {
+                    'students': userId
+                }
+            },
+            {
+                $lookup: {
+                    from: 'users', // Replace 'users' with the actual name of your user collection
+                    localField: 'students',
+                    foreignField: '_id', // Assuming _id is the user ID in the 'users' collection
+                    as: 'userData'
+                }
+            },
+            {
+                $unwind: '$userData'
+            },
+            {
+                $project: {
+                    _id: 0,
+                    task_name: 1,
+                    title: 1,
+                    duration: 1,
+                    subtitle: 1,
+                    user: {
+                        _id: '$userData._id',
+                        username: '$userData.username', // Adjust based on your user schema
+                        // Add other user fields as needed
+                    }
+                }
+            }
+        ]);
 
-        if (!userTasks) {
+        if (!userTasks || userTasks.length === 0) {
             return res.status(NOT_FOUND).json({ error: 'User tasks not found' });
         }
 
@@ -121,6 +152,7 @@ const getUserTasks = async (req, res, next) => {
         next(err);
     }
 };
+
 
 export default {
     taskGet,
