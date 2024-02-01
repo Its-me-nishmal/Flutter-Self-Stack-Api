@@ -2,7 +2,7 @@ import mongoose from "mongoose";
 import { v4  as uuidv4 } from 'uuid'
 import bcrypt from "bcrypt"
 
-const userSchema = new Schema({
+const userSchema = new mongoose.Schema({
     _id: { type: String, default: () => `self-stack-user-${uuidv4()}`, required: true },
     username: { type: String },
     email: { type: String, unique: true },
