@@ -108,8 +108,9 @@ const getUserTasks = async (req, res, next) => {
     try {
         const userId = req.params.userId;
 
-        // Assuming you have a user model with the ID stored in the 'students' array
-        const userTasks = await TaskModel.find({ 'students': userId });
+        // Assuming you have a User model
+        const userTasks = await TaskModel.find({ 'students': userId })
+            .populate('students', 'username email') // Adjust fields as per your User schema
 
         if (!userTasks) {
             return res.status(NOT_FOUND).json({ error: 'User tasks not found' });
@@ -121,6 +122,7 @@ const getUserTasks = async (req, res, next) => {
         next(err);
     }
 };
+
 
 export default {
     taskGet,
