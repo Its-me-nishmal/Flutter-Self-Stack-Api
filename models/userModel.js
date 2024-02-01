@@ -14,8 +14,8 @@ const userSchema = new mongoose.Schema({
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
-    tasksStarted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
-    tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
+    tasksStarted: [{ taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
+    tasksCompleted: [{ taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
 }, { timestamps: true });
 
 // Set a default task for the tasksStarted array
