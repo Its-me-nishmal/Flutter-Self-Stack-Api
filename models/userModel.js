@@ -23,7 +23,7 @@ const userSchema = new Schema({
 // Set a default task for the tasksStarted array
 userSchema.pre('save', function (next) {
     if (!this.tasksStarted || this.tasksStarted.length === 0) {
-        this.tasksStarted.push({ taskId: mongoose.Types.ObjectId('65b4dcbf99ed8f5bfb782a9e') });
+        this.tasksStarted.push({ taskId: new mongoose.Types.ObjectId('65b4dcbf99ed8f5bfb782a9e') });
     }
     next();
 });
