@@ -1,4 +1,5 @@
 import { TaskModel } from '../models/taskModel.js';
+import { User } from '../models/userModel.js';
 import httpStatus from 'http-status';
 
 const { OK, CREATED, NOT_FOUND } = httpStatus;
@@ -108,15 +109,27 @@ const getUserTasks = async (req, res, next) => {
     try {
         const userId = req.params.userId;
 
-        // Assuming you have a User model
-        const userTasks = await TaskModel.find({ 'students': userId })
-            .populate('students', 'username email') // Adjust fields as per your User schema
+        // Assuming you have a user model with the ID stored in the 'students' array
+        const userTasks = await TaskModel.find({ 'students': userId });
 
-        if (!userTasks) {
+        if (!userTasks || userTasks.length === 0) {
             return res.status(NOT_FOUND).json({ error: 'User tasks not found' });
         }
 
-        res.status(OK).json(userTasks);
+        // Fetch user data separately
+        const userData = await User.findOne({ '_id': userId });
+
+        if (!userData) {
+            return res.status(NOT_FOUND).json({ error: 'User data not found' });
+        }
+
+        // Combine user tasks and user data in a single response
+        const response = {
+            userTasks: userTasks,
+            userData: userData
+        };
+
+        res.status(OK).json(response);
     } catch (err) {
         // Pass any errors to the error-handling middleware
         next(err);
