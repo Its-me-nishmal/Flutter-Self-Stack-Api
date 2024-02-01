@@ -2,7 +2,9 @@ import mongoose from "mongoose";
 import { v4  as uuidv4 } from 'uuid'
 import bcrypt from "bcrypt"
 
-const userSchema = new mongoose.Schema({
+const Schema = mongoose.Schema;
+
+const userSchema = new Schema({
     _id: { type: String, default: () => `self-stack-user-${uuidv4()}`, required: true },
     username: { type: String },
     email: { type: String, unique: true },
@@ -14,9 +16,12 @@ const userSchema = new mongoose.Schema({
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
-    tasksStarted: [{ taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
-    tasksCompleted: [{ taskId: { type: mongoose.Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
+    tasksStarted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
+    tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
 }, { timestamps: true });
+
+
+
 
 // Set a default task for the tasksStarted array
 userSchema.pre('save', function (next) {
