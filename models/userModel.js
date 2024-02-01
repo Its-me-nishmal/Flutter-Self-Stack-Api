@@ -2,8 +2,6 @@ import mongoose from "mongoose";
 import { v4  as uuidv4 } from 'uuid'
 import bcrypt from "bcrypt"
 
-const Schema = mongoose.Schema;
-
 const userSchema = new Schema({
     _id: { type: String, default: () => `self-stack-user-${uuidv4()}`, required: true },
     username: { type: String },
@@ -16,15 +14,15 @@ const userSchema = new Schema({
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
-    tasksStarted: [{ taskId: { type: String }, date: { type: Date, default: Date.now } }],
-    tasksCompleted: [{ taskId: { type: String }, date: { type: Date } }]
+    tasksStarted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
+    tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
 }, { timestamps: true });
 
 // Set a default task for the tasksStarted array
 userSchema.pre('save', function (next) {
     if (!this.tasksStarted || this.tasksStarted.length === 0) {
         // Set default task (replace 'defaultTaskId' with the actual ID of the default task)
-        this.tasksStarted.push({ taskId: 'self-stack-user-482c1866-fc46-4ee5-957b-1c88febde4d7' });
+        this.tasksStarted.push({ taskId: mongoose.Types.ObjectId('65b4dcbf99ed8f5bfb782a9e') });
     }
     next();
 });
