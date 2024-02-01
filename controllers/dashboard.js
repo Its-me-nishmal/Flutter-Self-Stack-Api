@@ -1,5 +1,5 @@
 import { TaskModel } from '../models/taskModel.js';
-import { User } from '../models/userModel.js';
+import User from '../models/userModel.js';
 import httpStatus from 'http-status';
 
 const { OK, CREATED, NOT_FOUND } = httpStatus;
