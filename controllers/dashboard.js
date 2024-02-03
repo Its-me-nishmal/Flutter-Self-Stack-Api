@@ -17,6 +17,7 @@ const taskGet = async (req, res, next) => {
     }
 };
 
+
 const taskGetAll = async (req, res, next) => {
     try {
         const tasks = await TaskModel.find();
@@ -137,6 +138,30 @@ const getUserTasks = async (req, res, next) => {
 };
 
 
+const innerTaskGet = async (req, res, next) => {
+    try {
+        const courseId = req.params.courseId;
+        const taskId = req.params.taskId;
+
+        const course = await TaskModel.findById(courseId);
+
+        if (!course) {
+            return res.status(NOT_FOUND).json({ error: 'Course not found' });
+        }
+
+        const task = course.tasks.id(taskId);
+
+        if (!task) {
+            return res.status(NOT_FOUND).json({ error: 'Task not found' });
+        }
+
+        res.status(OK).json(task);
+    } catch (error) {
+        next(error);
+    }
+};
+
+
 export default {
     taskGet,
     taskGetAll,
@@ -146,5 +171,6 @@ export default {
     taskDelAll,
     taskCreateMultiple,
     taskUpdateMultiple,
-    getUserTasks
+    getUserTasks,
+    innerTaskGet
 };

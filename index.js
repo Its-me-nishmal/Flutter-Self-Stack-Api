@@ -8,7 +8,12 @@ import apiKey from './middleware/apiKey.js';
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/prodect.js';
 import { errorHandler } from './middleware/err.js';
-import taskRoutes from './routes/dashboard.js'
+import taskRoutes from './routes/dashboard.js';
+import figlet from 'figlet';
+import lolcatjs from 'lolcatjs';
+
+lolcatjs.options.seed = Math.random(); 
+
 
 const app = express();
 connect()
@@ -27,6 +32,14 @@ app.get('/',(req,res)=>{
 
 
 const port = process.env.PORT || '8080'
+figlet("Running", function (err, data) {
+    if (err) {
+      console.log("Something went wrong...");
+      console.dir(err);
+      return;
+    }
+    console.log(lolcatjs.fromString(data));
+  });
 app.listen(port, () => {console.log(color.green(`Connecting to port ${port}`))});
 
 export default app;

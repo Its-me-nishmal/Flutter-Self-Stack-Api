@@ -235,28 +235,21 @@ const loginWithGoogle = async (req, res, next) => {
         console.log(req.body);
         const { email, name, googleId } = req.body;
 
-        // Check if the email already exists in the database
         const existingUser = await User.findOne({ email });
 
         if (!existingUser) {
-            // If the email doesn't exist, create a new user
-            const newUser = new User({ email, name, googleId /*, other fields */ });
+            const newUser = new User({ email, name, googleId });
             const savedUser = await newUser.save();
 
-            // Return the newly created user
             res.status(OK).json(savedUser);
         } else {
-            // If the email already exists, update the user document with any additional information
             existingUser.name = name;
             existingUser.googleId = googleId;
-            // Update other fields as needed
             const updatedUser = await existingUser.save();
 
-            // Return the updated user
             res.status(OK).json(updatedUser);
         }
     } catch (err) {
-        // Pass any errors to the error-handling middleware
         next(err);
     }
 };

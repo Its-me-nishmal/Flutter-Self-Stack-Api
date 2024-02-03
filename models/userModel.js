@@ -17,8 +17,10 @@ const userSchema = new Schema({
     profile: { type: String },
     googleId: { type: String },
     tasksStarted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
-    tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }]
+    tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }],
+    courseId: { type: Schema.Types.ObjectId, ref: 'tasks' }, // Assuming 'courses' is the model name for the courses collection
 }, { timestamps: true });
+
 
 
 
