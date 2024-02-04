@@ -1,10 +1,10 @@
 # Self-Stack Flutter Backend API
 
-Welcome to the Self-Stack Flutter Backend API project! This repository contains the backend API built with Node.js to support the Self-Stack Flutter application.
+Welcome to the Self-Stack Flutter Backend API project! This repository contains the backend API built with Node.js to support the Self-Stack education system.
 
 ## Overview
 
-The Self-Stack project is designed to [provide a brief description of the project and its purpose]. It aims to [mention the goals and objectives].
+The Self-Stack project is an education system designed to streamline communication and task management among managers, advisers, and students. It provides a centralized platform for managing tasks, attendance, student registrations, and user authentication.
 
 ## Table of Contents
 
@@ -12,12 +12,25 @@ The Self-Stack project is designed to [provide a brief description of the projec
 - [Setup](#setup)
 - [Usage](#usage)
 - [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Managers](#managers)
+  - [Advisers](#advisers)
+  - [Students](#students)
+  - [Tasks](#tasks)
+  - [Attendance](#attendance)
+  - [Registrations](#registrations)
+- [Error Handling](#error-handling)
 - [Contributing](#contributing)
 - [License](#license)
 
 ## Features
 
-- [List key features of your backend API]
+- Streamlined education system
+- Role-based access (Managers, Advisers, Students)
+- Task management
+- Attendance tracking
+- Student registration
+- User authentication
 
 ## Setup
 
