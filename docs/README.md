@@ -6,22 +6,7 @@ Welcome to the Self-Stack Flutter Backend API project! This repository contains 
 
 The Self-Stack project is an education system designed to streamline communication and task management among managers, advisers, and students. It provides a centralized platform for managing tasks, attendance, student registrations, and user authentication.
 
-## Table of Contents
 
-- [Features](#features)
-- [Setup](#setup)
-- [Usage](#usage)
-- [API Endpoints](#api-endpoints)
-  - [Authentication](#authentication)
-  - [Managers](#managers)
-  - [Advisers](#advisers)
-  - [Students](#students)
-  - [Tasks](#tasks)
-  - [Attendance](#attendance)
-  - [Registrations](#registrations)
-- [Error Handling](#error-handling)
-- [Contributing](#contributing)
-- [License](#license)
 
 ## Features
 

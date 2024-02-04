@@ -1,0 +1,16 @@
+## Table of Contents
+
+- [Features](#features)
+- [Setup](#setup)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+  - [Authentication](#authentication)
+  - [Managers](#managers)
+  - [Advisers](#advisers)
+  - [Students](#students)
+  - [Tasks](#tasks)
+  - [Attendance](#attendance)
+  - [Registrations](#registrations)
+- [Error Handling](#error-handling)
+- [Contributing](#contributing)
+- [License](#license)
