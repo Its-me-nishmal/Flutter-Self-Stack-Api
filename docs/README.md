@@ -1,48 +1,35 @@
-# GPT + DALL-E + WhatsApp = AI Assistant 🚀
+# Self-Stack Flutter Backend API
 
-![Docker](https://github.com/askrella/whatsapp-chatgpt/actions/workflows/docker.yml/badge.svg)
-![Prettier](https://github.com/askrella/whatsapp-chatgpt/actions/workflows/prettier.yml/badge.svg)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+Welcome to the Self-Stack Flutter Backend API project! This repository contains the backend API built with Node.js to support the Self-Stack Flutter application.
 
-[![Discord Invite](https://dcbadge.vercel.app/api/server/9VJaRXKwd3)](https://discord.gg/9VJaRXKwd3)
+## Overview
 
-This WhatsApp bot uses OpenAI's GPT and DALL-E 2 to respond to user inputs.
+The Self-Stack project is designed to [provide a brief description of the project and its purpose]. It aims to [mention the goals and objectives].
 
-You can talk to the bot in voice messages, the bot will transcribe and respond. :robot:
+## Table of Contents
 
-<p align="center">
-<img width="904" alt="Whatsapp ChatGPT" src="https://user-images.githubusercontent.com/6507938/220681521-17a12a41-44df-4d51-b491-f6a83871fc9e.png">
-</p>
+- [Features](#features)
+- [Setup](#setup)
+- [Usage](#usage)
+- [API Endpoints](#api-endpoints)
+- [Contributing](#contributing)
+- [License](#license)
 
-## Requirements
+## Features
 
--   Node.js (18 or newer)
--   A recent version of npm
--   An [OpenAI API key](https://beta.openai.com/signup)
--   A WhatsApp account
+- [List key features of your backend API]
 
-## Documentation
+## Setup
 
-In the documentation you can find more information about how to install, configure and use this bot.
+### Prerequisites
 
-<span style="font-size: 1.4rem;">➡️ https://askrella.github.io/whatsapp-chatgpt</span>
+- [Node.js](https://nodejs.org/) installed
+- [MongoDB](https://www.mongodb.com/) installed (or any other database you're using)
 
-## Disclaimer
+### Installation
 
-The operations performed by this bot are not free. You will be charged by OpenAI for each request you make.
+1. Clone the repository:
 
-This bot uses Puppeteer to run a real instance of Whatsapp Web to avoid getting blocked.
-
-NOTE: We can't guarantee that you won't be blocked using this method, although it does work. WhatsApp does not allow bots or unofficial clients on its platform, so this should not be considered completely safe.
-
-## Contributors
-
-<a href="https://github.com/askrella/whatsapp-chatgpt/graphs/contributors">
-  <img src="https://contrib.rocks/image?repo=askrella/whatsapp-chatgpt" />
-</a>
-
-## Used libraries
-
--   https://github.com/transitive-bullshit/chatgpt-api
--   https://github.com/pedroslopez/whatsapp-web.js
--   https://github.com/askrella/speech-rest-api
+   ```bash
+   git clone https://github.com/your-username/self-stack-backend.git
+   cd self-stack-backend
