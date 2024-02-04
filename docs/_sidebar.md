@@ -1,4 +1,4 @@
-- [Features](/features)
+- [Features](/features.md)
 - [Setup](/setup)
 - [Usage](/usage)
 - [API Endpoints](/api-endpoints)
