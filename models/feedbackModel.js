@@ -8,7 +8,7 @@ const Schema = mongoose.Schema;
 const feedbackSchema = new Schema({
     _id: { type: String, default: () => `self-stack-feedback-${uuidv4()}`, required: true },
     userId: { type: String, ref: 'User', required: true },
-    purpose: { type: String, required: true },
+    taskId: { type: String },
     content: { type: String, required: true },
     date: { type: Date, default: Date.now }
 }, { timestamps: true });
