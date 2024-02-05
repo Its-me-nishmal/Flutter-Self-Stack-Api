@@ -10,14 +10,22 @@ const userSchema = new Schema({
     email: { type: String, unique: true },
     name: { type: String },
     password: { type: String },
-    phone: { type: Number, unique: true },
+    phone: { type: Number },
     passwordResetOTP: { type: String },
     passwordResetExpires: { type: Date },
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
-    tasksStarted: [{ taskId: { type: String, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
-    tasksCompleted: [{ taskId: { type: String, ref: 'tasks' }, date: { type: Date } }],
+    tasksStarted: [{ 
+        _id: { type: String, default: () => `self-stack-taskStarted-${uuidv4()}`, required: true },
+        taskId: { type: String, ref: 'tasks' },
+        date: { type: Date, default: Date.now }
+    }],
+    tasksCompleted: [{ 
+        _id: { type: String, default: () => `self-stack-taskCompleted-${uuidv4()}`, required: true },
+        taskId: { type: String, ref: 'tasks' },
+        date: { type: Date }
+    }],
     courseId: { type: String, ref: 'tasks' },
     domain: { type: String, default: 'No' }
 }, { timestamps: true });
