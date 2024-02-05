@@ -26,7 +26,6 @@ const userSchema = new Schema({
         taskId: { type: String, ref: 'tasks' },
         date: { type: Date }
     }],
-    courseId: { type: String, ref: 'tasks' },
     domain: { type: String, default: 'No' }
 }, { timestamps: true });
 

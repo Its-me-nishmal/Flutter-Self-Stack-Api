@@ -6,6 +6,8 @@ import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dotenv from "dotenv";
+import CourseModel from '../models/taskModel.js';
+
 
 
 const { OK, INTERNAL_SERVER_ERROR } = httpStatus;
