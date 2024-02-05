@@ -1,5 +1,6 @@
 import mongoose from 'mongoose';
 import { v4 as uuidv4 } from 'uuid';
+
 const Schema = mongoose.Schema;
 
 // Subtitle schema
@@ -26,6 +27,9 @@ const CourseSchema = new Schema({
   tasks: [TaskSchema]
 });
 
-const TaskModel = mongoose.model('Task', CourseSchema);
+// Create the models
+const SubtitleModel = mongoose.model('Subtitle', SubtitleSchema);
+const TaskModel = mongoose.model('Task', TaskSchema);
+const CourseModel = mongoose.model('Course', CourseSchema);
 
-export default TaskModel;
+export { SubtitleModel, TaskModel, CourseModel };
