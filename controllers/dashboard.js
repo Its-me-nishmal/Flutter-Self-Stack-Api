@@ -4,29 +4,30 @@ import httpStatus from 'http-status';
 
 const { OK, CREATED, NOT_FOUND } = httpStatus;
 
-const courseGet = async (req, res, next) => {
+const taskGet = async (req, res, next) => {
     try {
-        const courseId = req.params.id;
-        const course = await CourseModel.findById(courseId);
-        if (!course) {
-            return res.status(NOT_FOUND).json({ error: 'Course not found' });
+        const taskId = req.params.id;
+        const task = await CourseModel.findById(taskId);
+        if (!task) {
+            return res.status(NOT_FOUND).json({ error: 'Task not found' });
         }
-        res.status(OK).json(course);
+        res.status(OK).json(task);
     } catch (error) {
         next(error);
     }
 };
 
-const courseGetAll = async (req, res, next) => {
+
+const taskGetAll = async (req, res, next) => {
     try {
-        const courses = await CourseModel.find();
-        res.status(OK).json(courses);
+        const tasks = await CourseModel.find();
+        res.status(OK).json(tasks);
     } catch (error) {
         next(error);
     }
 };
 
-const courseCreate = async (req, res, next) => {
+const taskCreate = async (req, res, next) => {
     try {
         const { course_name, students, tasks } = req.body;
 
@@ -43,98 +44,104 @@ const courseCreate = async (req, res, next) => {
     }
 };
 
-const courseUpdate = async (req, res, next) => {
+
+const taskUpdate = async (req, res, next) => {
     try {
-        const courseId = req.params.id;
+        const taskId = req.params.id;
         const updateFields = req.body;
 
-        const updatedCourse = await CourseModel.findByIdAndUpdate(courseId, updateFields, { new: true });
-        res.status(OK).json(updatedCourse);
+        const updatedTask = await CourseModel.findByIdAndUpdate(taskId, updateFields, { new: true });
+        res.status(OK).json(updatedTask);
     } catch (error) {
         next(error);
     }
 };
 
-const courseDelete = async (req, res, next) => {
+const taskDelete = async (req, res, next) => {
     try {
-        const courseId = req.params.id;
+        const taskId = req.params.id;
 
-        const deletedCourse = await CourseModel.findByIdAndDelete(courseId);
-        if (!deletedCourse) {
-            return res.status(NOT_FOUND).json({ error: 'Course not found' });
+        const deletedTask = await CourseModel.findByIdAndDelete(taskId);
+        if (!deletedTask) {
+            return res.status(NOT_FOUND).json({ error: 'Task not found' });
         }
-        res.status(OK).json(deletedCourse);
+        res.status(OK).json(deletedTask);
     } catch (error) {
         next(error);
     }
 };
 
-const courseDelAll = async (req, res, next) => {
+const taskDelAll = async (req, res, next) => {
     try {
-        const deletedCourses = await CourseModel.deleteMany();
-        res.status(OK).json(deletedCourses);
+        const deletedTasks = await CourseModel.deleteMany();
+        res.status(OK).json(deletedTasks);
     } catch (error) {
         next(error);
     }
 };
 
-const courseCreateMultiple = async (req, res, next) => {
+const taskCreateMultiple = async (req, res, next) => {
     try {
-        const courses = req.body.map(course => ({ ...course }));
-        const createdCourses = await CourseModel.create(courses);
-        res.status(OK).json(createdCourses);
+        const tasks = req.body.map(task => ({ ...task }));
+        const createdTasks = await CourseModel.create(tasks);
+        res.status(OK).json(createdTasks);
     } catch (error) {
         next(error);
     }
 };
 
-const courseUpdateMultiple = async (req, res, next) => {
+const taskUpdateMultiple = async (req, res, next) => {
     try {
         const updates = req.body;
-        const updatedCourses = [];
+        const updatedTasks = [];
 
         for (const update of updates) {
-            const updatedCourse = await CourseModel.findByIdAndUpdate(update.id, update.fieldsToUpdate, { new: true });
-            updatedCourses.push(updatedCourse);
+            const updatedTask = await CourseModel.findByIdAndUpdate(update.id, update.fieldsToUpdate, { new: true });
+            updatedTasks.push(updatedTask);
         }
 
-        res.status(OK).json(updatedCourses);
+        res.status(OK).json(updatedTasks);
     } catch (error) {
         next(error);
     }
 };
 
-const getUserCourses = async (req, res, next) => {
+const getUserTasks = async (req, res, next) => {
     try {
         const userId = req.params.userId;
 
-        const userCourses = await CourseModel.find({ 'students': userId });
+        // Assuming you have a user model with the ID stored in the 'students' array
+        const userTasks = await CourseModel.find({ 'students': userId });
 
-        if (!userCourses || userCourses.length === 0) {
-            return res.status(NOT_FOUND).json({ error: 'User courses not found' });
+        if (!userTasks || userTasks.length === 0) {
+            return res.status(NOT_FOUND).json({ error: 'User tasks not found' });
         }
 
+        // Fetch user data separately
         const userData = await User.findOne({ '_id': userId });
 
         if (!userData) {
             return res.status(NOT_FOUND).json({ error: 'User data not found' });
         }
 
+        // Combine user tasks and user data in a single response
         const response = {
-            userCourses: userCourses,
+            userTasks: userTasks,
             userData: userData
         };
 
         res.status(OK).json(response);
     } catch (err) {
+        // Pass any errors to the error-handling middleware
         next(err);
     }
 };
 
-const innerCourseGet = async (req, res, next) => {
+
+const innerTaskGet = async (req, res, next) => {
     try {
         const courseId = req.params.courseId;
-        const innerCourseId = req.params.innerCourseId;
+        const taskId = req.params.taskId;
 
         const course = await CourseModel.findById(courseId);
 
@@ -142,27 +149,28 @@ const innerCourseGet = async (req, res, next) => {
             return res.status(NOT_FOUND).json({ error: 'Course not found' });
         }
 
-        const innerCourse = course.tasks.id(innerCourseId);
+        const task = course.tasks.id(taskId);
 
-        if (!innerCourse) {
-            return res.status(NOT_FOUND).json({ error: 'Inner Course not found' });
+        if (!task) {
+            return res.status(NOT_FOUND).json({ error: 'Task not found' });
         }
 
-        res.status(OK).json(innerCourse);
+        res.status(OK).json(task);
     } catch (error) {
         next(error);
     }
 };
 
+
 export default {
-    courseGet,
-    courseGetAll,
-    courseCreate,
-    courseUpdate,
-    courseDelete,
-    courseDelAll,
-    courseCreateMultiple,
-    courseUpdateMultiple,
-    getUserCourses,
-    innerCourseGet
+    taskGet,
+    taskGetAll,
+    taskCreate,
+    taskUpdate,
+    taskDelete,
+    taskDelAll,
+    taskCreateMultiple,
+    taskUpdateMultiple,
+    getUserTasks,
+    innerTaskGet
 };
