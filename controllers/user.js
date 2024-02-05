@@ -6,7 +6,7 @@ import jwt from "jsonwebtoken";
 import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dotenv from "dotenv";
-import CourseModel from '../models/taskModel.js';
+import TaskModel from '../models/taskModel.js';
 
 
 
@@ -87,15 +87,15 @@ const userUpdate = async (req, res, next) => {
             return;
         }
 
-        const userCourses = await CourseModel.find({ students: userId });
+        const userCourses = await TaskModel.find({ students: userId });
 
         await Promise.all(userCourses.map(async (course) => {
-            await CourseModel.findByIdAndUpdate(course._id, {
+            await TaskModel.findByIdAndUpdate(course._id, {
                 $pull: { students: userId }
             });
         }));
 
-        await CourseModel.findOneAndUpdate(
+        await TaskModel.findOneAndUpdate(
             { students: { $nin: [userId] } },
             { $addToSet: { students: userId } }
         );
