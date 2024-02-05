@@ -83,7 +83,7 @@ const userUpdate = async (req, res, next) => {
         const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
 
         // Check if domain is not 'No'
-        if (updatedUser.domain !== 'No') {
+        if (updatedUser.domain === 'No') {
             res.status(200).json(updatedUser);
             return;
         }
