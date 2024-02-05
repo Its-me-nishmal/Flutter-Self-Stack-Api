@@ -77,12 +77,33 @@ const userCreateMultiple = async (req, res, next) => {
 
 const userUpdate = async (req, res, next) => {
     try {
-        const updatedUser = await User.findByIdAndUpdate(req.params.id, req.body, { new: true });
-        res.status(OK).json(updatedUser);
+        const userId = req.params.id;
+        const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
+
+        if (updatedUser.domain === 'No' || typeof updatedUser._id !== 'string') {
+            res.status(200).json(updatedUser);
+            return;
+        }
+
+        const userCourses = await CourseModel.find({ students: userId });
+
+        await Promise.all(userCourses.map(async (course) => {
+            await CourseModel.findByIdAndUpdate(course._id, {
+                $pull: { students: userId }
+            });
+        }));
+
+        await CourseModel.findOneAndUpdate(
+            { students: { $nin: [userId] } },
+            { $addToSet: { students: userId } }
+        );
+
+        res.status(200).json(updatedUser);
     } catch (err) {
         next(err);
     }
-}
+};
+
 
 const userUpdateMultiple = async (req, res, next) => {
     try {
