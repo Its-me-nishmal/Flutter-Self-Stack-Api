@@ -7,6 +7,7 @@ import bodyParser from 'body-parser';
 import apiKey from './middleware/apiKey.js';
 import userRoutes from './routes/user.js';
 import productRoutes from './routes/prodect.js';
+import feedbackRoutes from './routes/feedback.js';
 import { errorHandler } from './middleware/err.js';
 import taskRoutes from './routes/dashboard.js';
 import figlet from 'figlet';
@@ -23,6 +24,7 @@ app.use('/api', apiKey);
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes)
 app.use('/api/products', productRoutes);
+app.use('/api/feedback', feedbackRoutes);
 app.use(errorHandler);
 
 app.get('/',(req,res)=>{
