@@ -98,6 +98,16 @@ const userUpdate = async (req, res, next) => {
             { $addToSet: { students: userId } }
         );
 
+        // Check if there are tasks in the course, and if yes, add the first task to started tasks
+        const courseId = updatedUser.courseId;
+        const course = await CourseModel.findById(courseId);
+        if (course.tasks.length > 0) {
+            const firstTaskId = course.tasks[0]._id;
+            await User.findByIdAndUpdate(userId, {
+                $addToSet: { tasksStarted: { taskId: firstTaskId } }
+            });
+        }
+
         res.status(200).json(updatedUser);
     } catch (err) {
         next(err);
