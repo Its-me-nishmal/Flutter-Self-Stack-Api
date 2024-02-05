@@ -26,4 +26,6 @@ const CourseSchema = new Schema({
   tasks: [TaskSchema]
 });
 
-export const TaskModel = mongoose.model('Task', CourseSchema);
+const TaskModel = mongoose.model('Task', CourseSchema);
+
+export default TaskModel;
