@@ -89,16 +89,20 @@ const userUpdate = async (req, res, next) => {
 
         const userCourses = await CourseModel.find({ students: userId });
 
+        // Remove user from existing courses
         await Promise.all(userCourses.map(async (course) => {
             await CourseModel.findByIdAndUpdate(course._id, {
                 $pull: { students: userId }
             });
         }));
 
-        await CourseModel.findOneAndUpdate(
-            { students: { $nin: [userId] } },
-            { $addToSet: { students: userId } }
-        );
+        // Add user to a specific course based on the domain
+        const specificCourse = await CourseModel.findOne({ _id: updatedUser.domain });
+        if (specificCourse) {
+            await CourseModel.findByIdAndUpdate(specificCourse._id, {
+                $addToSet: { students: userId }
+            });
+        }
 
         // Check if there are tasks in the course, and if yes, add the first task to started tasks
         const courseId = updatedUser.domain;
@@ -115,6 +119,7 @@ const userUpdate = async (req, res, next) => {
         next(err);
     }
 };
+
 
 
 const userUpdateMultiple = async (req, res, next) => {
