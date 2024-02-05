@@ -99,7 +99,7 @@ const userUpdate = async (req, res, next) => {
         );
 
         // Check if there are tasks in the course, and if yes, add the first task to started tasks
-        const courseId = updatedUser.courseId;
+        const courseId = updatedUser.domain;
         const course = await CourseModel.findById(courseId);
         if (course.tasks.length > 0) {
             const firstTaskId = course.tasks[0]._id;
