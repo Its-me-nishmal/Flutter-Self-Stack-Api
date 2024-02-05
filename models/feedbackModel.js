@@ -10,7 +10,6 @@ const feedbackSchema = new Schema({
     userId: { type: String, ref: 'User', required: true },
     purpose: { type: String, required: true },
     content: { type: String, required: true },
-    rating: { type: Number, required: true },
     date: { type: Date, default: Date.now }
 }, { timestamps: true });
 

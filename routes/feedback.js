@@ -4,7 +4,7 @@ import { postFeedback } from '../controllers/feedback.js';
 
 const router = express.Router();
 
-router.post('/feedback', postFeedback);
+router.post('/', postFeedback);
 
 
 
