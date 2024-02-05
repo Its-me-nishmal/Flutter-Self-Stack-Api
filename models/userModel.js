@@ -16,14 +16,11 @@ const userSchema = new Schema({
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
-    tasksStarted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
-    tasksCompleted: [{ taskId: { type: Schema.Types.ObjectId, ref: 'tasks' }, date: { type: Date } }],
-    courseId: { type: Schema.Types.ObjectId, ref: 'tasks' },
-    domain: { type:String, default:'No' }
+    tasksStarted: [{ taskId: { type: String, ref: 'tasks' }, date: { type: Date, default: Date.now } }],
+    tasksCompleted: [{ taskId: { type: String, ref: 'tasks' }, date: { type: Date } }],
+    courseId: { type: String, ref: 'tasks' },
+    domain: { type: String, default: 'No' }
 }, { timestamps: true });
-
-
-
 
 userSchema.pre('save', async function (next) {
     if (!this.isModified('password')) return next();
