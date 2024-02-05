@@ -82,36 +82,36 @@ const userUpdate = async (req, res, next) => {
         const userId = req.params.id;
         const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
 
+        // Check if domain is not 'No'
         if (updatedUser.domain !== 'No') {
             res.status(200).json(updatedUser);
             return;
         }
 
-        const userCourses = await CourseModel.find({ students: userId });
-
         // Remove user from existing courses
+        const userCourses = await CourseModel.find({ students: userId });
         await Promise.all(userCourses.map(async (course) => {
             await CourseModel.findByIdAndUpdate(course._id, {
                 $pull: { students: userId }
             });
         }));
 
-        // Add user to a specific course based on the domain
-        const specificCourse = await CourseModel.findOne({ _id: updatedUser.domain });
-        if (specificCourse) {
-            await CourseModel.findByIdAndUpdate(specificCourse._id, {
-                $addToSet: { students: userId }
-            });
-        }
+        // Check if domain is set in req.body and add user to a specific course
+        if (req.body.domain) {
+            const specificCourse = await CourseModel.findOne({ _id: req.body.domain });
+            if (specificCourse) {
+                await CourseModel.findByIdAndUpdate(specificCourse._id, {
+                    $addToSet: { students: userId }
+                });
 
-        // Check if there are tasks in the course, and if yes, add the first task to started tasks
-        const courseId = updatedUser.domain;
-        const course = await CourseModel.findById(courseId);
-        if (course.tasks.length > 0) {
-            const firstTaskId = course.tasks[0]._id;
-            await User.findByIdAndUpdate(userId, {
-                $addToSet: { tasksStarted: { taskId: firstTaskId } }
-            });
+                // Check if there are tasks in the course, and if yes, add the first task to started tasks
+                if (specificCourse.tasks.length > 0) {
+                    const firstTaskId = specificCourse.tasks[0]._id;
+                    await User.findByIdAndUpdate(userId, {
+                        $addToSet: { tasksStarted: { taskId: firstTaskId } }
+                    });
+                }
+            }
         }
 
         res.status(200).json(updatedUser);
@@ -119,6 +119,7 @@ const userUpdate = async (req, res, next) => {
         next(err);
     }
 };
+
 
 
 
