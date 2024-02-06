@@ -3,7 +3,6 @@ import { v4 as uuidv4 } from 'uuid';
 import bcrypt from "bcrypt";
 
 const Schema = mongoose.Schema;
-
 const userSchema = new Schema({
     _id: { type: String, default: () => `self-stack-user-${uuidv4()}`, required: true },
     username: { type: String },
@@ -16,21 +15,42 @@ const userSchema = new Schema({
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
-    image: { type : String , default: "https://i.imgur.com/epIrs27.jpeg"},
-    tasksStarted: [{ 
+    image: { type: String, default: "https://i.imgur.com/epIrs27.jpeg" },
+    tasksStarted: [{
         _id: { type: String, default: () => `self-stack-taskStarted-${uuidv4()}`, required: true },
         taskId: { type: String, ref: 'tasks' },
         date: { type: Date, default: Date.now }
     }],
-    tasksCompleted: [{ 
+    tasksCompleted: [{
         _id: { type: String, default: () => `self-stack-taskCompleted-${uuidv4()}`, required: true },
         taskId: { type: String, ref: 'tasks' },
         date: { type: Date }
     }],
-    domain: { type: String, default: 'No' }
+    domain: { type: String, default: 'No' },
+    batch: { type: String },
+    dateOfBirth: { type: Date },
+    age: { type: Number },
+    gender: { type: String },
+    guardian: { type: String },
+    place: { type: String },
+    educationQualification: { type: String },
+    workExperience: { type: String },
+    address: { type: String }
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
+    if (this.dateOfBirth) {
+        const currentDate = new Date();
+        const birthDate = new Date(this.dateOfBirth);
+        const age = currentDate.getFullYear() - birthDate.getFullYear();
+
+        // Adjust age if birthday hasn't occurred yet this year
+        if (currentDate.getMonth() < birthDate.getMonth() || (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+            this.age = age - 1;
+        } else {
+            this.age = age;
+        }
+    }
     if (!this.isModified('password')) return next();
     try {
         const hashpass = await bcrypt.hash(this.password, 10);
@@ -39,6 +59,7 @@ userSchema.pre('save', async function (next) {
     } catch (error) {
         next(error);
     }
+    next();
 });
 
 userSchema.methods.comparePassword = async function (pass) {
