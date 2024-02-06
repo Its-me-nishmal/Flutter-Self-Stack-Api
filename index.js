@@ -12,6 +12,7 @@ import { errorHandler } from './middleware/err.js';
 import taskRoutes from './routes/dashboard.js';
 import figlet from 'figlet';
 import lolcatjs from 'lolcatjs';
+import path  from 'path'
 
 lolcatjs.options.seed = Math.random(); 
 
@@ -28,7 +29,7 @@ app.use('/api/feedback', feedbackRoutes);
 app.use(errorHandler);
 
 app.get('/',(req,res)=>{
-    res.status(200).json({'sucsess':"working"})
+    res.sendfile(path.join('./docs/index.html'))
 })
 
 
