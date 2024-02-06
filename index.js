@@ -29,7 +29,7 @@ app.use('/api/feedback', feedbackRoutes);
 app.use(errorHandler);
 
 app.get('/',(req,res)=>{
-    res.sendfile(path.join('./docs/index.html'))
+    res.sendfile(path.join('docs/index.html'))
 })
 
 
