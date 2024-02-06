@@ -16,6 +16,7 @@ const userSchema = new Schema({
     roll: { type: String, default: "Student" },
     profile: { type: String },
     googleId: { type: String },
+    image: { type : String , default: "https://i.imgur.com/epIrs27.jpeg"},
     tasksStarted: [{ 
         _id: { type: String, default: () => `self-stack-taskStarted-${uuidv4()}`, required: true },
         taskId: { type: String, ref: 'tasks' },
