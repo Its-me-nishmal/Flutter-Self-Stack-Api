@@ -39,18 +39,6 @@ const userSchema = new Schema({
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
-    if (this.dateOfBirth) {
-        const currentDate = new Date();
-        const birthDate = new Date(this.dateOfBirth);
-        const age = currentDate.getFullYear() - birthDate.getFullYear();
-
-        // Adjust age if birthday hasn't occurred yet this year
-        if (currentDate.getMonth() < birthDate.getMonth() || (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
-            this.age = age - 1;
-        } else {
-            this.age = age;
-        }
-    }
     if (!this.isModified('password')) return next();
     try {
         const hashpass = await bcrypt.hash(this.password, 10);
@@ -63,6 +51,34 @@ userSchema.pre('save', async function (next) {
 
 userSchema.methods.comparePassword = async function (pass) {
     return bcrypt.compare(pass, this.password);
+};
+userSchema.statics.updateUserById = async function (userId, updateFields) {
+    // Your update logic here
+    const user = await this.findByIdAndUpdate(
+        { _id: userId },
+        {
+            $set: updateFields,
+            $currentDate: { updatedAt: true } // Optionally update the updatedAt field
+        },
+        { new: true } // Return the modified document
+    );
+
+    if (user && user.dateOfBirth) {
+        const currentDate = new Date();
+        const birthDate = new Date(user.dateOfBirth);
+        const age = currentDate.getFullYear() - birthDate.getFullYear();
+
+        // Adjust age if birthday hasn't occurred yet this year
+        if (currentDate.getMonth() < birthDate.getMonth() || (currentDate.getMonth() === birthDate.getMonth() && currentDate.getDate() < birthDate.getDate())) {
+            user.age = age - 1;
+        } else {
+            user.age = age;
+        }
+
+        await user.save(); // Save the document after updating the age
+    }
+
+    return user;
 };
 
 const User = mongoose.model('User', userSchema);
