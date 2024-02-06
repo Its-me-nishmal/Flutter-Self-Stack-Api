@@ -59,7 +59,6 @@ userSchema.pre('save', async function (next) {
     } catch (error) {
         next(error);
     }
-    next();
 });
 
 userSchema.methods.comparePassword = async function (pass) {
