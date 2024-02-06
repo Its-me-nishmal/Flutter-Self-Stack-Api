@@ -29,7 +29,8 @@ app.use('/api/feedback', feedbackRoutes);
 app.use(errorHandler);
 
 app.get('/',(req,res)=>{
-    res.sendfile(path.join('docs/index.html'))
+  const indexPath = new URL('docs/index.html', import.meta.url).pathname;
+    res.sendfile(indexPath)
 })
 
 
