@@ -272,19 +272,19 @@ const updatePassword = async (req, res, next) => {
 const loginWithGoogle = async (req, res, next) => {
     try {
         console.log(req.body);
-        const { email, name, googleId, photoURL } = req.body;
+        const { email, name, googleId, image } = req.body;
 
         const existingUser = await User.findOne({ email });
 
         if (!existingUser) {
-            const newUser = new User({ email, name, googleId, image:photoURL });
+            const newUser = new User({ email, name, googleId, image });
             const savedUser = await newUser.save();
 
             res.status(OK).json(savedUser);
         } else {
             existingUser.name = name;
             existingUser.googleId = googleId;
-            existingUser.image = photoURL;
+            existingUser.image = image;
             const updatedUser = await existingUser.save();
 
             res.status(OK).json(updatedUser);
