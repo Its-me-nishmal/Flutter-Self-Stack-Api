@@ -6,51 +6,44 @@ import Student from '../models/userModel.js';
 import { CourseModel } from '../models/taskModel.js'; // Import CourseModel
 
 export const getReviewsByStudent = async (req, res) => {
-    try {
-      const { studentId } = req.params;
-  
-      // Fetch student details
-      const student = await Student.findById(studentId);
-      if (!student) {
-        return res.status(404).json({ message: 'Student not found' });
-      }
-  
-      // Fetch reviews for the student
-      const reviews = await ReviewTask.find({ student: studentId });
-  
-      // Fetch task name for each review
-      const reviewsWithTaskName = await Promise.all(reviews.map(async (review) => {
-        // Find the course containing the task
-        const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
-        const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
-        return {
-          taskId: review.taskId,
-          taskName: task ? task.task_name : 'Task not found',
-          points: review.points,
-          advisor: review.advisor,
-          reviewver: review.reviewver,
-          scheduleDate: review.scheduleDate.split('T')[0],
-          completedDate: review.completedDate,
-          reviewDetails: review.reviewDetails,
-          pendingTopics: review.pendingTopics,
-          remarks: review.remarks
-        };
-      }));
-  
-      // Calculate total review score
-      const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
-  
-      // Combine student details with reviews and total score
-      const combinedData = {
-        totalScore: totalScore,
-        student: student,
-        reviews: reviewsWithTaskName,
-      };
-  
-      res.json(combinedData);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+  try {
+    const { studentId } = req.params;
+
+    // Fetch student details
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
     }
+
+    // Fetch reviews for the student
+    const reviews = await ReviewTask.find({ student: studentId });
+
+    // Fetch task name for each review
+    const reviewsWithTaskName = await Promise.all(reviews.map(async (review) => {
+      // Find the course containing the task
+      const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
+      const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
+      const scheduleDate = review.scheduleDate; // Added this line to declare scheduleDate
+      return {
+        taskId: review.taskId,
+        taskName: task ? task.task_name : 'Task not found',
+        points: review.points,
+        advisor: review.advisor,
+        reviewver: review.reviewver,
+        scheduleDate: scheduleDate ? scheduleDate.split('T')[0] : null, // Adjusted this line
+        completedDate: review.completedDate,
+        reviewDetails: review.reviewDetails,
+        pendingTopics: review.pendingTopics,
+        remarks: review.remarks
+      };
+    }));
+    
+    res.status(200).json(reviewsWithTaskName);
+    
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ message: 'Internal Server Error' });
+  }
 };
 
   
