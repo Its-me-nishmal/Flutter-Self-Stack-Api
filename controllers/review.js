@@ -3,40 +3,59 @@
 import ReviewTask from '../models/reviewsModel.js';
 import Student from '../models/userModel.js'; 
 
+import { CourseModel } from '../models/courseModel'; // Import CourseModel
+
 export const getReviewsByStudent = async (req, res) => {
-  try {
-    const { studentId } = req.params;
-
-    // Fetch student details
-    const student = await Student.findById(studentId);
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
-    }
-
-    // Fetch reviews for the student
-    const reviews = await ReviewTask.find({ student: studentId }).populate('taskId');
-    
-    // Calculate total review score
-    const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
-
-    // Combine student details with reviews and total score
-    const combinedData = {
-      totalScore: totalScore,
-      student: student,
-      reviews: reviews.map(review => {
-          const { taskId, ...rest } = review.toJSON();
+    try {
+      const { studentId } = req.params;
+  
+      // Fetch student details
+      const student = await Student.findById(studentId);
+      if (!student) {
+        return res.status(404).json({ message: 'Student not found' });
+      }
+  
+      // Fetch reviews for the student
+      const reviews = await ReviewTask.find({ student: studentId });
+  
+      // Fetch task name for each review
+      const reviewsWithTaskName = await Promise.all(reviews.map(async (review) => {
+        // Find the course containing the task
+        const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
+        if (!course) {
           return {
-              ...rest,
-              taskName: taskId.task_name // Add task name to the review object
+            taskId: review.taskId,
+            taskName: 'Task not found',
+            points: review.points,
+            // Include other review details as needed
           };
-      })
-    };
-
-    res.json(combinedData);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
+        }
+        // Find the task within the course
+        const task = course.tasks.find(task => task._id.toString() === review.taskId);
+        return {
+          taskId: review.taskId,
+          taskName: task ? task.task_name : 'Task not found',
+          points: review.points,
+          // Include other review details as needed
+        };
+      }));
+  
+      // Calculate total review score
+      const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
+  
+      // Combine student details with reviews and total score
+      const combinedData = {
+        totalScore: totalScore,
+        student: student,
+        reviews: reviewsWithTaskName,
+      };
+  
+      res.json(combinedData);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
+    }
 };
+
   
 
 // Create or update review task
