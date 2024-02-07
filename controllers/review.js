@@ -17,7 +17,7 @@ export const getReviewsByStudent = async (req, res) => {
       const reviews = await ReviewTask.find({ student: studentId });
   
       // Calculate total review score
-      const totalScore = reviews.reduce((acc, review) => acc + review.score, 0);
+      const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
   
       // Combine student details with reviews and total score
       const combinedData = {
