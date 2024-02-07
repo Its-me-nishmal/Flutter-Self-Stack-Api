@@ -30,7 +30,7 @@ export const getReviewsByStudent = async (req, res) => {
         points: review.points,
         advisor: review.advisor,
         reviewver: review.reviewver,
-        scheduleDate: scheduleDate ? scheduleDate.split('T')[0] : null, // Adjusted this line
+        scheduleDate: scheduleDate ? scheduleDate.toISOString().split('T')[0] : null, // Adjusted this line
         completedDate: review.completedDate,
         reviewDetails: review.reviewDetails,
         pendingTopics: review.pendingTopics,
