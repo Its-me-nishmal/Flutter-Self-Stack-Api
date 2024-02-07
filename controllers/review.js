@@ -29,7 +29,7 @@ export const getReviewsByStudent = async (req, res) => {
           points: review.points,
           advisor: review.advisor,
           reviewver: review.reviewver,
-          scheduleDate: review.scheduleDate.toISOString().split('T')[0],
+          scheduleDate: review.scheduleDate.split('T')[0],
           completedDate: review.completedDate,
           reviewDetails: review.reviewDetails,
           pendingTopics: review.pendingTopics,
