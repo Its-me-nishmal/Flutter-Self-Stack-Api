@@ -24,6 +24,7 @@ export const getReviewsByStudent = async (req, res) => {
         const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
         const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
         const scheduleDate = review.scheduleDate;
+        const completedDate = review.completedDate;
         return {
           taskId: review.taskId,
           taskName: task ? task.task_name : 'Task not found',
@@ -31,7 +32,7 @@ export const getReviewsByStudent = async (req, res) => {
           advisor: review.advisor,
           reviewver: review.reviewver,
           scheduleDate: scheduleDate ? review.scheduleDate.toISOString().split('T')[0] : null ,
-          completedDate: review.completedDate,
+          completedDate: completedDate ? review.completedDate : null ,
           reviewDetails: review.reviewDetails,
           pendingTopics: review.pendingTopics,
           remarks: review.remarks
