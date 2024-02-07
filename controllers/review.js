@@ -4,29 +4,34 @@ import ReviewTask from '../models/reviewsModel.js';
 import Student from '../models/userModel.js'; 
 
 export const getReviewsByStudent = async (req, res) => {
-  try {
-    const { studentId } = req.params;
-
-    // Fetch student details
-    const student = await Student.findById(studentId);
-    if (!student) {
-      return res.status(404).json({ message: 'Student not found' });
+    try {
+      const { studentId } = req.params;
+  
+      // Fetch student details
+      const student = await Student.findById(studentId);
+      if (!student) {
+        return res.status(404).json({ message: 'Student not found' });
+      }
+  
+      // Fetch reviews for the student
+      const reviews = await ReviewTask.find({ student: studentId });
+  
+      // Calculate total review score
+      const totalScore = reviews.reduce((acc, review) => acc + review.score, 0);
+  
+      // Combine student details with reviews and total score
+      const combinedData = {
+        totalScore: totalScore,
+        student: student,
+        reviews: reviews,
+      };
+  
+      res.json(combinedData);
+    } catch (error) {
+      res.status(500).json({ message: error.message });
     }
-
-    // Fetch reviews for the student
-    const reviews = await ReviewTask.find({ student: studentId });
-
-    // Combine student details with reviews
-    const combinedData = {
-      student: student,
-      reviews: reviews
-    };
-
-    res.json(combinedData);
-  } catch (error) {
-    res.status(500).json({ message: error.message });
-  }
-};
+  };
+  
 
 // Create or update review task
 export const saveReview = async (req, res) => {
