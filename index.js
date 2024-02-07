@@ -12,7 +12,8 @@ import { errorHandler } from './middleware/err.js';
 import taskRoutes from './routes/dashboard.js';
 import figlet from 'figlet';
 import lolcatjs from 'lolcatjs';
-import path  from 'path'
+import routes from './routes/routes.js';
+
 
 lolcatjs.options.seed = Math.random(); 
 
@@ -22,16 +23,12 @@ connect()
 
 app.use(bodyParser.json());
 app.use('/api', apiKey);
+app.use('/', routes)
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes)
 app.use('/api/products', productRoutes);
 app.use('/api/feedback', feedbackRoutes);
 app.use(errorHandler);
-
-app.get('/',(req,res)=>{
-  const indexPath = new URL('docs/index.html', import.meta.url).pathname;
-    res.sendfile(indexPath)
-})
 
 
 
