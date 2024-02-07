@@ -1,6 +1,7 @@
 import express from 'express';
 import userController from '../controllers/user.js';
-import { getReviewsByStudent,saveReview } from '../controllers/review.js';
+import { getReviewsByStudent, saveReview } from '../controllers/review.js';
+
 // import auth from '../middleware/auth.js'
 
 const router = express.Router();
