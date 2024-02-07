@@ -22,21 +22,18 @@ export const getReviewsByStudent = async (req, res) => {
       const reviewsWithTaskName = await Promise.all(reviews.map(async (review) => {
         // Find the course containing the task
         const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
-        if (!course) {
-          return {
-            taskId: review.taskId,
-            taskName: 'Task not found',
-            points: review.points,
-            // Include other review details as needed
-          };
-        }
-        // Find the task within the course
-        const task = course.tasks.find(task => task._id.toString() === review.taskId);
+        const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
         return {
           taskId: review.taskId,
           taskName: task ? task.task_name : 'Task not found',
           points: review.points,
-          // Include other review details as needed
+          advisor: review.advisor,
+          reviewver: review.reviewver,
+          scheduleDate: review.scheduleDate,
+          completedDate: review.completedDate,
+          reviewDetails: review.reviewDetails,
+          pendingTopics: review.pendingTopics,
+          remarks: review.remarks
         };
       }));
   
