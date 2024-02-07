@@ -19,7 +19,7 @@ router.post('/forgot-password', userController.forgotPassword);
 router.post('/updatePassword', userController.updatePassword);
 router.post('/verifyOTP',userController.verifyOTP);
 router.post('/loginGoogle',userController.loginWithGoogle)
-router.get('/:id/reviews',getReviewsByStudent)
+router.get('/:studentId/reviews',getReviewsByStudent)
 router.post('/reviews', saveReview);
 router.put('/reviews/:reviewId', saveReview);
 
