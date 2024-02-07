@@ -41,7 +41,8 @@ const reviewSchema = new mongoose.Schema({
         ]
     },
     pendingTopics: {
-        type: String
+        type: String,
+        default: "all topics are covered"
     },
     remarks: {
         type: String
