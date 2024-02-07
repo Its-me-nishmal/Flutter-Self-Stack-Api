@@ -1,6 +1,6 @@
 // controllers/reviewController.js
 
-import ReviewTask from '../models/ReviewTask.js';
+import ReviewTask from '../models/reviewsModel.js';
 import Student from '../models/userModel.js'; 
 
 export const getReviewsByStudent = async (req, res) => {
