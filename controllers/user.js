@@ -16,6 +16,12 @@ const { OK, INTERNAL_SERVER_ERROR } = httpStatus;
 const userGet = async (req, res, next) => {
     try {
         const user = await User.findById(req.params.id);
+
+        // Splitting the dateOfBirth field to get only the date part
+        if (user && user.dateOfBirth) {
+            user.dateOfBirth = user.dateOfBirth.toISOString().split('T')[0];
+        }
+
         res.status(OK).json(user);
     } catch (err) { next(err) }
 }
