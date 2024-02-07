@@ -4,33 +4,39 @@ import ReviewTask from '../models/reviewsModel.js';
 import Student from '../models/userModel.js'; 
 
 export const getReviewsByStudent = async (req, res) => {
-    try {
-      const { studentId } = req.params;
-  
-      // Fetch student details
-      const student = await Student.findById(studentId);
-      if (!student) {
-        return res.status(404).json({ message: 'Student not found' });
-      }
-  
-      // Fetch reviews for the student
-      const reviews = await ReviewTask.find({ student: studentId });
-  
-      // Calculate total review score
-      const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
-  
-      // Combine student details with reviews and total score
-      const combinedData = {
-        totalScore: totalScore,
-        student: student,
-        reviews: reviews,
-      };
-  
-      res.json(combinedData);
-    } catch (error) {
-      res.status(500).json({ message: error.message });
+  try {
+    const { studentId } = req.params;
+
+    // Fetch student details
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
     }
-  };
+
+    // Fetch reviews for the student
+    const reviews = await ReviewTask.find({ student: studentId }).populate('taskId');
+    
+    // Calculate total review score
+    const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
+
+    // Combine student details with reviews and total score
+    const combinedData = {
+      totalScore: totalScore,
+      student: student,
+      reviews: reviews.map(review => {
+          const { taskId, ...rest } = review.toJSON();
+          return {
+              ...rest,
+              taskName: taskId.task_name // Add task name to the review object
+          };
+      })
+    };
+
+    res.json(combinedData);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
   
 
 // Create or update review task
