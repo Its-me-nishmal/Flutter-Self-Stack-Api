@@ -3,7 +3,7 @@
 import ReviewTask from '../models/reviewsModel.js';
 import Student from '../models/userModel.js'; 
 
-import { CourseModel } from '../models/courseModel'; // Import CourseModel
+import { CourseModel } from '../models/taskModel.js'; // Import CourseModel
 
 export const getReviewsByStudent = async (req, res) => {
     try {
