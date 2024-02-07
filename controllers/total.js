@@ -9,7 +9,19 @@ export const updateRequestCount = (req, res, next) => {
 export const getTotalRequests = (req, res) => {
     RequestCount.findOne({})
         .then(count => {
-            res.status(200).json({ "success": true, "total_Requests": count.totalRequests ,"owner":"Its-me-nishmal"});
+            res.status(200).json({
+                "success": true,
+                "total_Requests": count.totalRequests,
+                "details": {
+                  "creator": "Nishmal 🚀",
+                  "license": "🔓 Free for All 🌍",
+                  "contact": {
+                    "for_api_key": "📩 Want to unlock the API magic? Drop me a message!"
+                  }
+                },
+                "message": "✨ Data retrieved successfully! 🎉"
+              }
+              );
         })
         .catch(err => {
             res.status(500).json({ "success": false, "message": "Error retrieving total requests" });
