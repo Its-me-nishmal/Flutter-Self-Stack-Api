@@ -13,6 +13,7 @@ import taskRoutes from './routes/dashboard.js';
 import figlet from 'figlet';
 import lolcatjs from 'lolcatjs';
 import routes from './routes/routes.js';
+import cors from 'cors';
 
 
 lolcatjs.options.seed = Math.random(); 
@@ -20,7 +21,7 @@ lolcatjs.options.seed = Math.random();
 
 const app = express();
 connect()
-
+app.use(cors());
 app.use(bodyParser.json());
 app.use('/api', apiKey);
 app.use('/', routes)
