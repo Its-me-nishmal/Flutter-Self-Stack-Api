@@ -81,7 +81,7 @@ export const getReviewByIdAndStudent = async (req, res) => {
 
     // Construct the response object
     const reviewDetails = {
-      reviewId:reviewDetails._id,
+      reviewId:review._id,
       taskId: review.taskId,
       taskName: task ? task.task_name : 'Task not found',
       points: review.points,
