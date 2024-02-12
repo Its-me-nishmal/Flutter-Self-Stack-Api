@@ -26,6 +26,7 @@ export const getReviewsByStudent = async (req, res) => {
         const scheduleDate = review.scheduleDate;
         const completedDate = review.completedDate;
         return {
+          reviewId:review._id,
           taskId: review.taskId,
           taskName: task ? task.task_name : 'Task not found',
           points: review.points,
@@ -80,6 +81,7 @@ export const getReviewByIdAndStudent = async (req, res) => {
 
     // Construct the response object
     const reviewDetails = {
+      reviewId:reviewDetails._id,
       taskId: review.taskId,
       taskName: task ? task.task_name : 'Task not found',
       points: review.points,
