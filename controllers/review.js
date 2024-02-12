@@ -55,7 +55,49 @@ export const getReviewsByStudent = async (req, res) => {
     }
 };
 
-  
+export const getReviewByIdAndStudent = async (req, res) => {
+  try {
+    const { studentId, reviewId } = req.params;
+
+    // Fetch student details
+    const student = await Student.findById(studentId);
+    if (!student) {
+      return res.status(404).json({ message: 'Student not found' });
+    }
+
+    // Fetch review for the student with the specified review ID
+    const review = await ReviewTask.findOne({ _id: reviewId, student: studentId });
+    if (!review) {
+      return res.status(404).json({ message: 'Review not found' });
+    }
+
+    // Fetch task name for the review
+    const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
+    const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
+
+    const scheduleDate = review.scheduleDate;
+    const completedDate = review.completedDate;
+
+    // Construct the response object
+    const reviewDetails = {
+      taskId: review.taskId,
+      taskName: task ? task.task_name : 'Task not found',
+      points: review.points,
+      advisor: review.advisor,
+      reviewver: review.reviewver,
+      scheduleDate: scheduleDate ? review.scheduleDate.toISOString().split('T')[0] : null ,
+      completedDate: completedDate ? review.completedDate.toISOString().split('T')[0] : null ,
+      reviewDetails: review.reviewDetails,
+      pendingTopics: review.pendingTopics,
+      remarks: review.remarks
+    };
+
+    res.json(reviewDetails);
+  } catch (error) {
+    res.status(500).json({ message: error.message });
+  }
+};
+
 
 // Create or update review task
 export const saveReview = async (req, res) => {

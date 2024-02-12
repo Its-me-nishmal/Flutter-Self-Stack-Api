@@ -1,6 +1,6 @@
 import express from 'express';
 import userController from '../controllers/user.js';
-import { getReviewsByStudent, saveReview } from '../controllers/review.js';
+import { getReviewsByStudent, saveReview, getReviewByIdAndStudent } from '../controllers/review.js';
 
 // import auth from '../middleware/auth.js'
 
@@ -24,5 +24,6 @@ router.get('/:studentId/reviews',getReviewsByStudent)
 
 router.post('/reviews', saveReview);
 router.put('/reviews/:reviewId', saveReview);
+router.get('/:studentId/reviews/:reviewId', getReviewByIdAndStudent);
 
 export default router;
