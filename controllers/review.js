@@ -98,19 +98,36 @@ export const getReviewByIdAndStudent = async (req, res) => {
     const scheduleDate = review.scheduleDate;
     const completedDate = review.completedDate;
 
+    // Calculate the number of days taken for completion
+    const daysTaken = completedDate ? Math.floor((completedDate - scheduleDate) / (1000 * 60 * 60 * 24)) : null;
+
+    // Determine the flag based on the number of days taken
+    let flag = '';
+    if (daysTaken <= 7) {
+      flag = 'within 7 days';
+    } else if (daysTaken === 3) {
+      flag = '3 days after';
+    } else if (daysTaken === 5) {
+      flag = '5 days after';
+    } else if (daysTaken === 10) {
+      flag = '10 days after';
+    }
+
     // Construct the response object
     const reviewDetails = {
-      reviewId:review._id,
+      reviewId: review._id,
       taskId: review.taskId,
       taskName: task ? task.task_name : 'Task not found',
       points: review.points,
       advisor: review.advisor,
       reviewver: review.reviewver,
-      scheduleDate: scheduleDate ? review.scheduleDate.toISOString().split('T')[0] : null ,
-      completedDate: completedDate ? review.completedDate.toISOString().split('T')[0] : null ,
+      scheduleDate: scheduleDate ? review.scheduleDate.toISOString().split('T')[0] : null,
+      completedDate: completedDate ? review.completedDate.toISOString().split('T')[0] : null,
       reviewDetails: review.reviewDetails,
       pendingTopics: review.pendingTopics,
-      remarks: review.remarks
+      remarks: review.remarks,
+      daysTaken: daysTaken,
+      flag: flag
     };
 
     res.json(reviewDetails);
@@ -118,6 +135,7 @@ export const getReviewByIdAndStudent = async (req, res) => {
     res.status(500).json({ message: error.message });
   }
 };
+
 
 
 // Create or update review task
