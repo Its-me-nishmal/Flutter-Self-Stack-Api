@@ -6,55 +6,74 @@ import Student from '../models/userModel.js';
 import { CourseModel } from '../models/taskModel.js'; // Import CourseModel
 
 export const getReviewsByStudent = async (req, res) => {
-    try {
+  try {
       const { studentId } = req.params;
-  
+
       // Fetch student details
       const student = await Student.findById(studentId);
       if (!student) {
-        return res.status(404).json({ message: 'Student not found' });
+          return res.status(404).json({ message: 'Student not found' });
       }
-  
+
       // Fetch reviews for the student
       const reviews = await ReviewTask.find({ student: studentId });
-  
+
       // Fetch task name for each review
       const reviewsWithTaskName = await Promise.all(reviews.map(async (review) => {
-        // Find the course containing the task
-        const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
-        const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
-        const scheduleDate = review.scheduleDate;
-        const completedDate = review.completedDate;
-        return {
-          reviewId:review._id,
-          taskId: review.taskId,
-          taskName: task ? task.task_name : 'Task not found',
-          points: review.points,
-          advisor: review.advisor,
-          reviewver: review.reviewver,
-          scheduleDate: scheduleDate ? review.scheduleDate.toISOString().split('T')[0] : null ,
-          completedDate: completedDate ? review.completedDate.toISOString().split('T')[0] : null ,
-          reviewDetails: review.reviewDetails,
-          pendingTopics: review.pendingTopics,
-          remarks: review.remarks
-        };
+          // Find the course containing the task
+          const course = await CourseModel.findOne({ 'tasks._id': review.taskId });
+          const task = course ? course.tasks.find(task => task._id.toString() === review.taskId) : null;
+          const scheduleDate = review.scheduleDate;
+          const completedDate = review.completedDate;
+
+          // Calculate the number of days taken for completion
+          const daysTaken = Math.floor((completedDate - scheduleDate) / (1000 * 60 * 60 * 24));
+
+          // Determine the flag based on the number of days taken
+          let flag = '';
+          if (daysTaken <= 7) {
+              flag = 'within 7 days';
+          } else if (daysTaken === 3) {
+              flag = '3 days after';
+          } else if (daysTaken === 5) {
+              flag = '5 days after';
+          } else if (daysTaken === 10) {
+              flag = '10 days after';
+          }
+
+          return {
+              reviewId: review._id,
+              taskId: review.taskId,
+              taskName: task ? task.task_name : 'Task not found',
+              points: review.points,
+              advisor: review.advisor,
+              reviewver: review.reviewver,
+              scheduleDate: scheduleDate ? review.scheduleDate.toISOString().split('T')[0] : null,
+              completedDate: completedDate ? review.completedDate.toISOString().split('T')[0] : null,
+              reviewDetails: review.reviewDetails,
+              pendingTopics: review.pendingTopics,
+              remarks: review.remarks,
+              daysTaken: daysTaken,
+              flag: flag // Add the flag to the object
+          };
       }));
-  
+
       // Calculate total review score
       const totalScore = reviews.reduce((acc, review) => acc + review.points, 0);
-  
+
       // Combine student details with reviews and total score
       const combinedData = {
-        totalScore: totalScore,
-        student: student,
-        reviews: reviewsWithTaskName,
+          totalScore: totalScore,
+          student: student,
+          reviews: reviewsWithTaskName,
       };
-  
+
       res.json(combinedData);
-    } catch (error) {
+  } catch (error) {
       res.status(500).json({ message: error.message });
-    }
+  }
 };
+
 
 export const getReviewByIdAndStudent = async (req, res) => {
   try {
