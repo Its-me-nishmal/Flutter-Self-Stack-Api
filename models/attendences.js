@@ -10,7 +10,7 @@ const attendanceSchema = new Schema({
     unique: true,
   },
     studentId: { type: String, required: true },
-    date: { type: Date, required: true },
+    date: { type: Date, required: true, default: Date.now() },
     status: { type: String, enum: ['Present', 'Absent'], required: true }
 });
 
