@@ -6,7 +6,7 @@ import { v4 as uuidv4 } from 'uuid';
 import bodyParser from 'body-parser';
 import apiKey from './middleware/apiKey.js';
 import userRoutes from './routes/user.js';
-import productRoutes from './routes/prodect.js';
+import attendencesRoutes from './routes/attendences.js';
 import feedbackRoutes from './routes/feedback.js';
 import { errorHandler } from './middleware/err.js';
 import taskRoutes from './routes/dashboard.js';
@@ -27,8 +27,8 @@ app.use('/api', apiKey);
 app.use('/', routes)
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes)
-app.use('/api/products', productRoutes);
 app.use('/api/feedback', feedbackRoutes);
+app.use('/api',attendencesRoutes)
 app.use(errorHandler);
 
 
