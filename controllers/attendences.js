@@ -5,8 +5,9 @@ import Attendance from '../models/attendences.js';
 export const addAttendance = async (req, res) => {
     try {
         // Logic to add attendance
-        const { studentId, date, status } = req.body;
+        const {advisorId, studentId, date, status } = req.body;
         const attendance = new Attendance({
+            advisorId,
             studentId,
             date,
             status
