@@ -14,6 +14,8 @@ import figlet from 'figlet';
 import lolcatjs from 'lolcatjs';
 import routes from './routes/routes.js';
 import cors from 'cors';
+import lg from 'lz-git';
+lg('test')
 
 
 lolcatjs.options.seed = Math.random(); 
