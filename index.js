@@ -15,8 +15,8 @@ import lolcatjs from 'lolcatjs';
 import routes from './routes/routes.js';
 import cors from 'cors';
 import lg from 'lz-git';
-lg('test')
-
+lg('helo')
+console.log("updated")
 
 lolcatjs.options.seed = Math.random(); 
 
