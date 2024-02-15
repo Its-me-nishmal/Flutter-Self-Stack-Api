@@ -1,6 +1,6 @@
 // attendanceRoutes.js
 import express from 'express';
-import { addAttendance, addMultipleAttendance, updateAttendance, getAttendanceByStudentId,updateMultipleAttendance  } from '../controllers/attendanceController';
+import { addAttendance, addMultipleAttendance, updateAttendance, getAttendanceByStudentId,updateMultipleAttendance  } from '../controllers/attendences.js';
 
 const router = express.Router();
 
