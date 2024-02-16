@@ -7,6 +7,8 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dotenv from "dotenv";
 import {CourseModel} from '../models/taskModel.js';
+import Attendance from '../models/attendences.js';
+import ReviewTask from '../models/reviewsModel.js';
 
 
 
@@ -15,16 +17,57 @@ const { OK, INTERNAL_SERVER_ERROR } = httpStatus;
 
 const userGet = async (req, res, next) => {
     try {
+        // Fetch user data by ID
         const user = await User.findById(req.params.id);
 
-        // Splitting the dateOfBirth field to get only the date part
-        if (user && user.dateOfBirth) {
-            user.dateOfBirth = user.dateOfBirth.toISOString().split('T')[0];
-        }
+        // If user found, proceed
+        if (user) {
+            // Splitting the dateOfBirth field to get only the date part
+            if (user.dateOfBirth) {
+                user.dateOfBirth = user.dateOfBirth.toISOString().split('T')[0];
+            }
 
-        res.status(OK).json(user);
-    } catch (err) { next(err) }
+            // Fetch attendance data for the user for today's date
+            const today = new Date();
+            today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for comparison
+            const attendanceData = await Attendance.find({ 
+                studentId: req.params.id,
+                date: { $gte: today } // Find records with dates greater than or equal to today
+            });
+
+            // Calculate count of review statuses
+            const reviewStatusCounts = await ReviewTask.aggregate([
+                { $match: { student: req.params.id } },
+                {
+                    $group: {
+                        _id: "$reviewDetails.status",
+                        count: { $sum: 1 }
+                    }
+                }
+            ]);
+
+            // Create a map to store review status counts
+            const reviewStatusMap = {};
+            reviewStatusCounts.forEach(status => {
+                reviewStatusMap[status._id] = status.count;
+            });
+
+            // Add attendance data and review status counts to the user object
+            user.attendance = attendanceData;
+            user.reviewStatusCounts = reviewStatusMap;
+
+            // Send response with user data
+            res.status(200).json(user);
+        } else {
+            // If user not found, send appropriate response
+            res.status(404).json({ message: 'User not found' });
+        }
+    } catch (err) {
+        // If an error occurs, pass it to the error handling middleware
+        next(err);
+    }
 }
+
 
 const userGetAll = async (req, res, next) => {
     try {
