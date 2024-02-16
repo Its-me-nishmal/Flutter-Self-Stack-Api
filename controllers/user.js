@@ -52,12 +52,15 @@ const userGet = async (req, res, next) => {
                 reviewStatusMap[status._id] = status.count;
             });
 
-            // Add attendance data and review status counts to the user object
-            user.attendance = attendanceData;
-            user.reviewStatusCounts = reviewStatusMap;
+            // Combine user data, attendance data, and review status counts into a single object
+            const combinedData = {
+                user: user.toObject(), // Convert Mongoose document to plain JavaScript object
+                attendance: attendanceData,
+                reviewStatusCounts: reviewStatusMap
+            };
 
-            // Send response with user data
-            res.status(200).json(user);
+            // Send combined data as response
+            res.status(200).json(combinedData);
         } else {
             // If user not found, send appropriate response
             res.status(404).json({ message: 'User not found' });
@@ -67,6 +70,7 @@ const userGet = async (req, res, next) => {
         next(err);
     }
 }
+
 
 
 const userGetAll = async (req, res, next) => {
