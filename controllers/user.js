@@ -43,7 +43,7 @@ const userGet = async (req, res, next) => {
             });
 
             // Fetch task name based on task ID
-            const taskData = await ReviewTask.findById(user.domain);
+            const taskData = await ReviewTask.findById(user._id);
 
             // Calculate count of review statuses
             const reviewStatusCounts = await ReviewTask.aggregate([
