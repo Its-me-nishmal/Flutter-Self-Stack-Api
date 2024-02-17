@@ -32,6 +32,8 @@ const userGet = async (req, res, next) => {
                     age--;
                 }
                 user.age = age;
+               user.dateOfBirth = user.dateOfBirth.toDateString().split("T")[0];
+
             }
 
             // Fetch attendance data for the user for today's date
@@ -43,7 +45,7 @@ const userGet = async (req, res, next) => {
             });
 
             // Fetch task name based on task ID
-            const taskData = await CourseModel.findById(user._id);
+            const taskData = await CourseModel.findById(user.domain);
 
             // Calculate count of review statuses
             const reviewStatusCounts = await ReviewTask.aggregate([
