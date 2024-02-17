@@ -22,9 +22,16 @@ const userGet = async (req, res, next) => {
 
         // If user found, proceed
         if (user) {
-            // Splitting the dateOfBirth field to get only the date part
+            // Calculate age based on date of birth
             if (user.dateOfBirth) {
-                user.dateOfBirth = user.dateOfBirth.toISOString().split('T')[0];
+                const birthDate = new Date(user.dateOfBirth);
+                const today = new Date();
+                let age = today.getFullYear() - birthDate.getFullYear();
+                const monthDiff = today.getMonth() - birthDate.getMonth();
+                if (monthDiff < 0 || (monthDiff === 0 && today.getDate() < birthDate.getDate())) {
+                    age--;
+                }
+                user.age = age;
             }
 
             // Fetch attendance data for the user for today's date
@@ -32,8 +39,11 @@ const userGet = async (req, res, next) => {
             today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for comparison
             const attendanceData = await Attendance.find({ 
                 studentId: req.params.id,
-                date: { $gte: today } // Find records with dates greater than or equal to today
+                date: { $gte: today } 
             });
+
+            // Fetch task name based on task ID
+            const taskData = await ReviewTask.findById(user.domain);
 
             // Calculate count of review statuses
             const reviewStatusCounts = await ReviewTask.aggregate([
@@ -52,10 +62,11 @@ const userGet = async (req, res, next) => {
                 reviewStatusMap[status._id] = status.count;
             });
 
-            // Combine user data, attendance data, and review status counts into a single object
+            // Combine user data, attendance data, task data, and review status counts into a single object
             const combinedData = {
                 user: user.toObject(), // Convert Mongoose document to plain JavaScript object
                 attendance: attendanceData,
+                domain: taskData ? taskData.name : null,
                 reviewStatusCounts: reviewStatusMap
             };
 
@@ -70,6 +81,7 @@ const userGet = async (req, res, next) => {
         next(err);
     }
 }
+
 
 
 
