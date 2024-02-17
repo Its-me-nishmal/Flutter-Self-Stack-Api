@@ -32,9 +32,10 @@ const userGet = async (req, res, next) => {
                     age--;
                 }
                 user.age = age;
-               user.dateOfBirth = user.dateOfBirth.toDateString().split("T")[0];
-
+                const formattedDateOfBirth = `${birthDate.getFullYear()}-${(birthDate.getMonth() + 1).toString().padStart(2, '0')}-${birthDate.getDate().toString().padStart(2, '0')}`;
+                user.dateOfBirth = formattedDateOfBirth;
             }
+            
 
             // Fetch attendance data for the user for today's date
             const today = new Date();
@@ -68,7 +69,7 @@ const userGet = async (req, res, next) => {
             const combinedData = {
                 user: user.toObject(), // Convert Mongoose document to plain JavaScript object
                 attendance: attendanceData,
-                domain: taskData ? taskData.name : null,
+                domain: taskData ? taskData.course_name : null,
                 reviewStatusCounts: reviewStatusMap
             };
 
