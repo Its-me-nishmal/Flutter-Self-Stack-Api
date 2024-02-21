@@ -8,6 +8,6 @@ router.post('/', todoController.createTodo);
 router.put('/:id', todoController.updateTodo);
 router.delete('/:id', todoController.deleteTodo);
 router.get('/:id', todoController.getTodoById);
-router.get('/user/:id', todoController.getPrivateTodosByUserId)
-router.get('/user/public/:id', todoController.getPublicTodos)
+router.get('/user/:userId', todoController.getPrivateTodosByUserId)
+router.get('/user/public/:userId', todoController.getPublicTodos)
 export default router;
