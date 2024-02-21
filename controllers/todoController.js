@@ -35,7 +35,7 @@ export const getTodoById = async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await Todo.findById(id);
-    const user = await User.findById(todo._id);
+    const user = await User.findById(todo.createdBy);
     todo.createdBy = user.name?user.name:''
     res.status(200).json(todo);
   } catch (err) {
