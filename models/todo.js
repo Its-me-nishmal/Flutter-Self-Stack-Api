@@ -7,7 +7,7 @@ const todoSchema = mongoose.Schema({
   date: Date,
   autoDeleteDate: Date,
   isPublic: { type: Boolean, default: true },
-  createdBy: { type: mongoose.Schema.Types.ObjectId, ref: 'User' },
+  createdBy: { type: String },
   percentage: { type: Number, default: 0 },
   status: { type: String, default: 'pending' } // 'pending', 'completed', etc.
 });
