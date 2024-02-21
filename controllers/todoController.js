@@ -43,4 +43,22 @@ export const getTodoById = async (req, res) => {
   }
 };
 
+export const getPrivateTodosByUserId = async (req, res) => {
+    try {
+      const { userId } = req.params;
+      const privateTodos = await Todo.find({ createdBy: userId, isPublic: false });
+      res.status(200).json(privateTodos);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  };
+  
+  export const getPublicTodos = async (req, res) => {
+    try {
+      const publicTodos = await Todo.find({ isPublic: true });
+      res.status(200).json(publicTodos);
+    } catch (err) {
+      res.status(400).json({ message: err.message });
+    }
+  };
 // You can add more controller methods as needed
