@@ -15,6 +15,7 @@ import lolcatjs from 'lolcatjs';
 import routes from './routes/routes.js';
 import cors from 'cors';
 import lg from 'lz-git';
+import todoRoutes from './routes/todoRoutes.js'
 lg('random')
 console.log("updated")
 
@@ -31,6 +32,7 @@ app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes)
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api',attendencesRoutes)
+app.use('/api',todoRoutes)
 app.use(errorHandler);
 
 
