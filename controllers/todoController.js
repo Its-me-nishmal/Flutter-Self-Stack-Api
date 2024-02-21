@@ -1,5 +1,6 @@
 // controllers/todoController.js
 import Todo from '../models/todo.js';
+import User from '../models/userModel.js';
 
 export const createTodo = async (req, res) => {
   try {
@@ -34,6 +35,8 @@ export const getTodoById = async (req, res) => {
   try {
     const { id } = req.params;
     const todo = await Todo.findById(id);
+    const user = await User.findById(todo._id);
+    todo.createdBy = user.name?user.name:''
     res.status(200).json(todo);
   } catch (err) {
     res.status(400).json({ message: err.message });
