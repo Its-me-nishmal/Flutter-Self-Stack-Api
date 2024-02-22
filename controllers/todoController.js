@@ -5,6 +5,7 @@ import User from '../models/userModel.js';
 export const createTodo = async (req, res) => {
   try {
     const todo = await Todo.create(req.body);
+    todo.percentage = (todo.percentage / 100).toFixed(2)
     res.status(201).json(todo);
   } catch (err) {
     res.status(400).json({ message: err.message });
