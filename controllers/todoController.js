@@ -61,7 +61,7 @@ export const getPrivateTodosByUserId = async (req, res) => {
       const publicTodos = await Todo.find({ isPublic: true });
       publicTodos.map(e => {
         const percent = e.percentage/100;
-        e.percentage = percent.toFixed(2);
+        e.percentage =percent ==0? 0.00: percent.toFixed(2);
         console.log(e.percentage);
       });
       console.log(publicTodos);
