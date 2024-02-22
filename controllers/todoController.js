@@ -62,6 +62,7 @@ export const getPrivateTodosByUserId = async (req, res) => {
       publicTodos.forEach(e => {
         e.percentage = (e.percentage / 100).toFixed(2)
       });
+      console.log(publicTodos);
       res.status(200).json(publicTodos);
     } catch (err) {
       res.status(400).json({ message: err.message });
