@@ -59,12 +59,12 @@ export const getPrivateTodosByUserId = async (req, res) => {
   export const getPublicTodos = async (req, res) => {
     try {
       const publicTodos = await Todo.find({ isPublic: true });
-      const es = publicTodos.map(e => {
+      publicTodos.map(e => {
         console.log(e);
-        e.percentage = e.percentage;
+        e.percentage = e.percentage/100;
         console.log(e.percentage);
       });
-      console.log(es);
+      console.log(publicTodos);
       res.status(200).json(publicTodos);
     } catch (err) {
       res.status(400).json({ message: err.message });
