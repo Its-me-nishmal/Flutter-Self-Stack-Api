@@ -60,7 +60,9 @@ export const getPrivateTodosByUserId = async (req, res) => {
     try {
       const publicTodos = await Todo.find({ isPublic: true });
       const es = publicTodos.map(e => {
+        console.log(e);
         e.percentage = e.percentage;
+        console.log(e.percentage);
       });
       console.log(es);
       res.status(200).json(publicTodos);
