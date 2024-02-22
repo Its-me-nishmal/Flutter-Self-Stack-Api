@@ -5,7 +5,6 @@ import User from '../models/userModel.js';
 export const createTodo = async (req, res) => {
   try {
     const todo = await Todo.create(req.body);
-    todo.percentage = (todo.percentage / 100).toFixed(2)
     res.status(201).json(todo);
   } catch (err) {
     res.status(400).json({ message: err.message });
@@ -48,6 +47,9 @@ export const getPrivateTodosByUserId = async (req, res) => {
     try {
       const { userId } = req.params;
       const privateTodos = await Todo.find({ createdBy: userId, isPublic: false });
+      privateTodos.forEach(e => {
+        e.percentage = (e.percentage / 100).toFixed(2)
+      });
       res.status(200).json(privateTodos);
     } catch (err) {
       res.status(400).json({ message: err.message });
@@ -57,6 +59,9 @@ export const getPrivateTodosByUserId = async (req, res) => {
   export const getPublicTodos = async (req, res) => {
     try {
       const publicTodos = await Todo.find({ isPublic: true });
+      publicTodos.forEach(e => {
+        e.percentage = (e.percentage / 100).toFixed(2)
+      });
       res.status(200).json(publicTodos);
     } catch (err) {
       res.status(400).json({ message: err.message });
