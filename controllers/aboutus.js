@@ -20,7 +20,7 @@ export const updateAboutUs = async (req, res) => {
 
 export const createAboutUs = async (req, res) => {
     try {
-      const newAboutUs = new AboutUs(req.body);
+      const newAboutUs = new AboutUs({...req.body});
       const savedAboutUs = await newAboutUs.save();
       res.status(201).json(savedAboutUs);
     } catch (error) {
