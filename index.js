@@ -17,6 +17,7 @@ import cors from 'cors';
 import lg from 'lz-git';
 import todoRoutes from './routes/todoRoutes.js'
 import aboutRoutes from './routes/about.js'
+import notificationRoutes from './routes/notification.js';
 lg('test ')
 console.log("updated")
 
@@ -35,7 +36,9 @@ app.use('/api/feedback', feedbackRoutes);
 app.use('/api',attendencesRoutes)
 app.use('/api/about',aboutRoutes)
 app.use('/api/todo',todoRoutes)
+app.use('/api/notification', notificationRoutes);
 app.use(errorHandler);
+
 
 
 
