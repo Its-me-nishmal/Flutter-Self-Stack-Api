@@ -1,10 +1,10 @@
-import { initializeApp, credential, messaging } from 'firebase-admin';
+
+import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK with your credentials
-import serviceAccount from './google.json' assert { type: 'json' };
-
-initializeApp({
-    credential: credential.cert(serviceAccount)
+import serviceAccount from './google.json' assert { type: 'json' };// Update with your service account key
+admin.initializeApp({
+    credential: admin.credential.cert(serviceAccount)
 });
 
 // Function to send notification
@@ -25,7 +25,7 @@ const sendNotification = async (notification, deviceToken = null) => {
     }
 
     try {
-        const response = await messaging().send(message);
+        const response = await admin.messaging().send(message);
         console.log('Notification sent successfully:', response);
     } catch (error) {
         console.error('Error sending notification:', error);
