@@ -1,6 +1,7 @@
 import mongoose from 'mongoose';
 
 const aboutUsSchema = new mongoose.Schema({
+    heading: String,
   email: String,
   phoneNumber: String,
   content: String,
