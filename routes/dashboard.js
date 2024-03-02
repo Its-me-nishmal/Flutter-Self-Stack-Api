@@ -1,6 +1,6 @@
 import express from 'express';
 import taskController from '../controllers/dashboard.js';
-import { createAboutUs, getAboutUs, updateAboutUs } from '../controllers/aboutus.js';
+
 
 
 const router = express.Router();
@@ -16,8 +16,6 @@ router.put('/multiple', taskController.taskUpdateMultiple);
 router.get('/user/:userId', taskController.getUserTasks),
 router.get('/:courseId/tasks/:taskId', taskController.innerTaskGet)
 
-router.get('/about', getAboutUs)
-router.put('/about', updateAboutUs)
-router.post('/about', createAboutUs)
+
 
 export default router;

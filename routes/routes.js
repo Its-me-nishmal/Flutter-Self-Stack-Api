@@ -7,4 +7,5 @@ router.use(RequestCountController.updateRequestCount);
 
 router.get('/', RequestCountController.getTotalRequests);
 
+
 export default router;

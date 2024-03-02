@@ -16,6 +16,7 @@ import routes from './routes/routes.js';
 import cors from 'cors';
 import lg from 'lz-git';
 import todoRoutes from './routes/todoRoutes.js'
+import aboutRoutes from './routes/about.js'
 lg('test ')
 console.log("updated")
 
@@ -30,9 +31,9 @@ app.use('/api', apiKey);
 app.use('/', routes)
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes)
-app.use('/api', taskRoutes)
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api',attendencesRoutes)
+app.use('/api/about',aboutRoutes)
 app.use('/api/todo',todoRoutes)
 app.use(errorHandler);
 
