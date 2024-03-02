@@ -30,6 +30,7 @@ app.use('/api', apiKey);
 app.use('/', routes)
 app.use('/api/users', userRoutes);
 app.use('/api/tasks', taskRoutes)
+app.use('/api', taskRoutes)
 app.use('/api/feedback', feedbackRoutes);
 app.use('/api',attendencesRoutes)
 app.use('/api/todo',todoRoutes)
