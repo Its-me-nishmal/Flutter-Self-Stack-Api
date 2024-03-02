@@ -1,6 +1,4 @@
-// notificationService.js
 
-// Import Firebase Admin SDK for sending notifications
 import admin from 'firebase-admin';
 
 // Initialize Firebase Admin SDK with your credentials
