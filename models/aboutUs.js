@@ -8,9 +8,15 @@ const aboutUsSchema = new mongoose.Schema({
   paraContent: String,
   subtitle: String,
   paraSub: String,
-  pointsAndDetails: [{ point: String, details: String }],
+  pointsAndDetails: { 
+    type: [{ point: String, details: String }],
+    default: []
+  },
   privacyLink: String,
-  socialMedia: [{ icon: String, link: String }]
+  socialMedia: {
+    type: [{ icon: String, link: String }],
+    default: []
+  }
 });
 
 const AboutUs = mongoose.model('AboutUs', aboutUsSchema);
