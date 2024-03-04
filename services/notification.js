@@ -1,35 +1,31 @@
+// FCMService.js
 
-// import admin from 'firebase-admin';
+import FCM from 'fcm-node';
 
-// // Initialize Firebase Admin SDK with your credentials
-// import serviceAccount from './google.json' assert { type: 'json' };// Update with your service account key
-// admin.initializeApp({
-//     credential: admin.credential.cert(serviceAccount)
-// });
+class FCMService {
+  constructor(serverKey) {
+    this.fcm = new FCM(serverKey);
+  }
 
-// // Function to send notification
-// const sendNotification = async (notification, deviceToken = null) => {
-//     // Logic to send notification using Firebase Cloud Messaging
-//     // Example:
-//     const message = {
-//         notification: {
-//             title: notification.title,
-//             body: notification.body
-//         }
-//     };
+  sendNotificationToDevice(deviceToken, title, body) {
+    const message = {
+      to: deviceToken,
+      notification: {
+        title: title,
+        body: body,
+      },
+    };
 
-//     if (deviceToken) {
-//         message.token = deviceToken; // Send notification to specific device
-//     } else {
-//         message.topic = 'allDevices'; // Send notification to all devices subscribed to topic 'allDevices'
-//     }
+    return new Promise((resolve, reject) => {
+      this.fcm.send(message, function(err, response) {
+        if (err) {
+          reject(err);
+        } else {
+          resolve(response);
+        }
+      });
+    });
+  }
+}
 
-//     try {
-//         const response = await admin.messaging().send(message);
-//         console.log('Notification sent successfully:', response);
-//     } catch (error) {
-//         console.error('Error sending notification:', error);
-//     }
-// };
-
-// export default sendNotification;
+export default FCMService;

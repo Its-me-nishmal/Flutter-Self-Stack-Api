@@ -1,11 +1,12 @@
-// // notificationRoutes.js
+// notificationRoutes.js
 
-// import express from 'express';
-// import sendNotificationController from '../controllers/notification.js';
+import express from 'express';
+import { sendNotificationToDevice ,getNotificationsByUserId } from '../controllers/notification.js';
 
-// const router = express.Router();
+const router = express.Router();
 
-// // Route to send notification
-// router.post('/send', sendNotificationController);
+// Route to send notification
+router.post('/send', sendNotificationToDevice);
+router.get('/notifications/:userId', getNotificationsByUserId);
 
-// export default router;
+export default router;
