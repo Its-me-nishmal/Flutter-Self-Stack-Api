@@ -10,10 +10,10 @@ const fcmService = new FCMService(serverKey);
 // Define API endpoint for sending notification
 const sendNotificationToDevice = async (req, res) => {
 
-  const { deviceToken, title, body } = req.body;
+  const { userId, deviceToken, title, body } = req.body;
 
   try {
-    const response = await fcmService.sendNotificationToDevice( userId, deviceToken, title, body);
+    const response = await fcmService.sendNotificationToDevice(deviceToken, title, body);
     const notification = new Notification({
       userId,
       deviceToken,

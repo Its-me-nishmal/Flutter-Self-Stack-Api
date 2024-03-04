@@ -19,7 +19,7 @@ import todoRoutes from './routes/todoRoutes.js'
 import aboutRoutes from './routes/about.js'
 import notificationRoutes from './routes/notification.js';
 import fcm from './services/notification.js'
-
+lg("last")
 
 
 lolcatjs.options.seed = Math.random(); 

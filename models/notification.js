@@ -1,3 +1,3 @@
-const Notification = (userId, title, body, userId) => ({ userId, title, body, userId });
+const Notification = (userId, title, body, deviceToken) => ({ userId, title, body, deviceToken });
 
 export default Notification;
