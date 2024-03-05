@@ -26,7 +26,8 @@ const userGet = async (req, res, next) => {
         // If user found, proceed
         if (user) {
             // Read contents of program_motive.json file
-            const programMotiveData = fs.readFileSync(path.join('../services/program_motive.json'));
+            const __filename = new URL(import.meta.url).pathname;
+            const programMotiveData = fs.readFileSync(path.join(path.dirname(__filename), '../services/program_motive.json'));
             const quotes = JSON.parse(programMotiveData);
 
             // Select a random quote and author
