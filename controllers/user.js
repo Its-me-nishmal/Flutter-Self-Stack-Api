@@ -15,6 +15,9 @@ import ReviewTask from '../models/reviewsModel.js';
 const { OK, INTERNAL_SERVER_ERROR } = httpStatus;
 
 
+import fs from 'fs';
+import path from 'path';
+
 const userGet = async (req, res, next) => {
     try {
         // Fetch user data by ID
@@ -22,6 +25,18 @@ const userGet = async (req, res, next) => {
 
         // If user found, proceed
         if (user) {
+            // Read contents of program_motive.json file
+            const programMotiveData = fs.readFileSync(path.join('../services/program_motive.json'));
+            const quotes = JSON.parse(programMotiveData);
+
+            // Select a random quote and author
+            const randomIndex = Math.floor(Math.random() * quotes.length);
+            const { quote: randomQuote, author: randomAuthor } = quotes[randomIndex];
+
+            // Add random quote and author to user object
+            user.randomQuote = randomQuote;
+            user.randomAuthor = randomAuthor;
+
             // Calculate age based on date of birth
             if (user.dateOfBirth) {
                 const birthDate = new Date(user.dateOfBirth);
@@ -36,7 +51,6 @@ const userGet = async (req, res, next) => {
                 user.dateOfBirth = formattedDateOfBirth;
             }
             
-
             // Fetch attendance data for the user for today's date
             const today = new Date();
             today.setHours(0, 0, 0, 0); // Set hours, minutes, seconds, and milliseconds to 0 for comparison
@@ -70,7 +84,9 @@ const userGet = async (req, res, next) => {
                 user: user.toObject(), // Convert Mongoose document to plain JavaScript object
                 attendance: attendanceData,
                 domain: taskData ? taskData.course_name : null,
-                reviewStatusCounts: reviewStatusMap
+                reviewStatusCounts: reviewStatusMap,
+                randomQuote,
+                randomAuthor
             };
 
             // Send combined data as response
