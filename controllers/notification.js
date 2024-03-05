@@ -41,4 +41,17 @@ const getNotificationsByUserId = async (req, res) => {
   }
 };
 
-export { sendNotificationToDevice , getNotificationsByUserId };
+const deleteNotificationById = async (req, res) => {
+  const notificationId = req.params.notificationId; // Extract notificationId from request parameters
+
+  try {
+    // Delete the notification by its ID
+    await Notification.findByIdAndDelete(notificationId);
+
+    res.json({ success: true, message: 'Notification deleted successfully' });
+  } catch (error) {
+    res.status(500).json({ success: false, error: error.message });
+  }
+};
+
+export { sendNotificationToDevice , getNotificationsByUserId , deleteNotificationById };
