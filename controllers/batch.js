@@ -12,7 +12,7 @@ export const getAllBatches = async (req, res) => {
             if (index === 0) {
                 return {
                     batch: batch,
-                    students: allStudents,
+                    studentIds: allStudents,
                     studentsInBatch: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
                 };
             } else {
