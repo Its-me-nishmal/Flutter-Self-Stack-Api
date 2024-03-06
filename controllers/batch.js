@@ -14,9 +14,8 @@ export const getAllBatches = async (req, res) => {
             batch: batch,
             students: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
         }));
-
         // Add all students to the first batch's students array
-        batchesWithStudents[0].students.push(...allStudents);
+        batchesWithStudents[0].push(...allStudents);
 
         return res.status(200).json({ batches: batchesWithStudents });
     } catch (error) {
