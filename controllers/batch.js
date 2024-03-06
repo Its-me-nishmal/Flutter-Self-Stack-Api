@@ -17,7 +17,6 @@ export const getAllBatches = async (req, res) => {
                         startDate:batch.startDate,
                         studentIds:allStudents
                     },
-                    studentIds: allStudents,
                 };
             } else {
                 return {
