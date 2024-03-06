@@ -10,10 +10,7 @@ export const getAllBatches = async (req, res) => {
 
         const batchesWithStudents = batches.map((batch, index) => {
             if (index === 0) {
-                return {
-                    batch: batch.studentIds = allStudents,
-                    studentsInBatch: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
-                };
+                batch.studentIds = allStudents;
             } else {
                 return {
                     batch: batch,
