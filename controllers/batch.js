@@ -3,8 +3,6 @@
 import Batch from '../models/batch.js';
 import User from '../models/userModel.js';
 
-
-
 export const getAllBatches = async (req, res) => {
     try {
         const batches = await Batch.find().populate('studentIds');
@@ -14,16 +12,12 @@ export const getAllBatches = async (req, res) => {
             batch: batch,
             students: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
         }));
-        // Add all students to the first batch's students array
-        batchesWithStudents[0].push(...allStudents);
 
-        return res.status(200).json({ batches: batchesWithStudents });
+        return res.status(200).json({ batches: batchesWithStudents, allStudents });
     } catch (error) {
-        console.log(error);
         return res.status(500).json({ error: 'Error retrieving batches and students' });
     }
 };
-
 
 
 export const createBatch = async (req, res) => {
