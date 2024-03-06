@@ -18,6 +18,7 @@ import lg from 'lz-git';
 import todoRoutes from './routes/todoRoutes.js'
 import aboutRoutes from './routes/about.js'
 import notificationRoutes from './routes/notification.js';
+import batchRotes from './routes/batch.js'
 import fcm from './services/notification.js'
 lg("last")
 
@@ -38,6 +39,7 @@ app.use('/api',attendencesRoutes)
 app.use('/api/about',aboutRoutes)
 app.use('/api/todo',todoRoutes)
 app.use('/api/notification', notificationRoutes);
+app.use('/api/batch',batchRotes)
 app.use(errorHandler);
 
 

@@ -6,8 +6,7 @@ const Schema = mongoose.Schema;
 const batchSchema = new Schema({
     name: { type: String, required: true },
     startDate: { type: Date, required: true },
-    endDate: { type: Date, required: true },
-    studentIds: [{ type: Schema.Types.ObjectId, ref: 'User' }] // Array of Student IDs referencing the User model
+    studentIds: [{ type: String, ref: 'User' }] // Array of Student IDs referencing the User model
     // Add other fields as needed
 }, { timestamps: true });
 
