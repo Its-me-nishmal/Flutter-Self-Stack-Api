@@ -8,16 +8,27 @@ export const getAllBatches = async (req, res) => {
         const batches = await Batch.find().populate('studentIds');
         const allStudents = await User.find(); // Retrieve all students from the User model
 
-        const batchesWithStudents = batches.map(batch => ({
-            batch: batch,
-            students: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
-        }));
+        const batchesWithStudents = batches.map((batch, index) => {
+            if (index === 0) {
+                return {
+                    batch: batch,
+                    students: allStudents,
+                    studentsInBatch: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
+                };
+            } else {
+                return {
+                    batch: batch,
+                    studentsInBatch: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
+                };
+            }
+        });
 
-        return res.status(200).json({ batches: batchesWithStudents, allStudents });
+        return res.status(200).json({ batches: batchesWithStudents });
     } catch (error) {
         return res.status(500).json({ error: 'Error retrieving batches and students' });
     }
 };
+
 
 
 export const createBatch = async (req, res) => {
