@@ -18,12 +18,10 @@ export const getAllBatches = async (req, res) => {
                         studentIds:allStudents
                     },
                     studentIds: allStudents,
-                    studentsInBatch: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
                 };
             } else {
                 return {
                     batch: batch,
-                    studentsInBatch: batch.studentIds.map(studentId => allStudents.find(student => student._id.toString() === studentId.toString()))
                 };
             }
         });
