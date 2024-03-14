@@ -242,7 +242,7 @@ const signIn = async (req, res, next) => {
 
         const token = jwt.sign({ userId: user._id, userRoll: user.roll }, 'this-for-self-stack-api', { expiresIn: '1h' })
 
-        res.json({ token, userId: user._id , userRoll: user.roll });
+        res.json({ token, userId: user._id , userRoll: user.roll , domain: user.domain });
     } catch (error) {
         console.error(error);
         next(error)
