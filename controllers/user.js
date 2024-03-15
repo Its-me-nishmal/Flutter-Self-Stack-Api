@@ -169,6 +169,7 @@ const userCreateMultiple = async (req, res, next) => {
 const userUpdate = async (req, res, next) => {
     try {
         const userId = req.params.id;
+        const prevUser = await User.findById(userId)
         const updatedUser = await User.findByIdAndUpdate(userId, req.body, { new: true });
 
         // Check if domain is not 'No'
@@ -184,14 +185,19 @@ const userUpdate = async (req, res, next) => {
                 $pull: { students: userId }
             });
         }));
-        const newBatchId = updatedUser.batch;
-         // Remove user from previous batch if exists
-         if (updatedUser.batch) {
-            await Batch.findByIdAndUpdate(updatedUser.batch, { $pull: { studentIds: userId } });
+        if (prevUser.batch && prevUser.batch !== updatedUser.batch) {
+            await Batch.findByIdAndUpdate(prevUser.batch, { $pull: { studentIds: userId } });
+        }
+
+        // Update user's batch
+        if (req.body.batch) {
+            await User.findByIdAndUpdate(userId, { batch: req.body.batch });
         }
 
         // Add user to the new batch
-        await Batch.findByIdAndUpdate(newBatchId, { $addToSet: { studentIds: userId } });
+        if (req.body.batch) {
+            await Batch.findByIdAndUpdate(req.body.batch, { $addToSet: { studentIds: userId } });
+        }
         // Check if domain is set in req.body and add user to a specific course
         if (req.body.domain) {
             const specificCourse = await CourseModel.findOne({ _id: req.body.domain });
