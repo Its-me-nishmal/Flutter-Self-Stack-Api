@@ -38,6 +38,7 @@ export const createBatch = async (req, res) => {
         const batch = await Batch.create(req.body);
         return res.status(201).json(batch);
     } catch (error) {
+        console.log(error)
         return res.status(500).json({ error: 'Error creating batch' });
     }
 };
