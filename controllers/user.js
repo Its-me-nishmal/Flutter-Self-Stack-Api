@@ -7,6 +7,7 @@ import crypto from 'crypto';
 import nodemailer from 'nodemailer';
 import dotenv from "dotenv";
 import {CourseModel} from '../models/taskModel.js';
+import Batch from '../models/batch.js';
 import Attendance from '../models/attendences.js';
 import ReviewTask from '../models/reviewsModel.js';
 
@@ -62,6 +63,7 @@ const userGet = async (req, res, next) => {
 
             // Fetch task name based on task ID
             const taskData = await CourseModel.findById(user.domain);
+            const batchDta = await Batch.findById(user.batch)
 
             // Calculate count of review statuses
             const reviewStatusCounts = await ReviewTask.aggregate([
@@ -79,6 +81,8 @@ const userGet = async (req, res, next) => {
             reviewStatusCounts.forEach(status => {
                 reviewStatusMap[status._id] = status.count;
             });
+
+            user.batch = batchDta ? batchDta.name : null;
 
             // Combine user data, attendance data, task data, and review status counts into a single object
             const combinedData = {
