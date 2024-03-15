@@ -184,7 +184,14 @@ const userUpdate = async (req, res, next) => {
                 $pull: { students: userId }
             });
         }));
+        const newBatchId = updatedUser.batch;
+         // Remove user from previous batch if exists
+         if (updatedUser.batch) {
+            await Batch.findByIdAndUpdate(updatedUser.batch, { $pull: { studentIds: userId } });
+        }
 
+        // Add user to the new batch
+        await Batch.findByIdAndUpdate(newBatchId, { $addToSet: { studentIds: userId } });
         // Check if domain is set in req.body and add user to a specific course
         if (req.body.domain) {
             const specificCourse = await CourseModel.findOne({ _id: req.body.domain });
