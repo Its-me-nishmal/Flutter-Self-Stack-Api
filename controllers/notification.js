@@ -10,25 +10,28 @@ const fcmService = new FCMService(serverKey);
 
 // Define API endpoint for sending notification
 const sendNotificationToDevice = async (req, res) => {
-
-  const { userId, title, body } = req.body;
-  const user = await User.findById(userId)
-  const deviceToken = user.notifyId
+  const { userIds, title, body } = req.body; // Assuming userIds is an array of user IDs
   try {
-    const response = await fcmService.sendNotificationToDevice(deviceToken, title, body);
-    const notification = new Notification({
-      userId,
-      deviceToken,
-      title,
-      body,
-      sentAt: new Date(),
-    });
-    await notification.save();
-    res.json({ success: true, response });
+    const notifications = await Promise.all(userIds.map(async (userId) => {
+      const user = await User.findById(userId);
+      const deviceToken = user.notifyId;
+      const response = await fcmService.sendNotificationToDevice(deviceToken, title, body);
+      const notification = new Notification({
+        userId,
+        deviceToken,
+        title,
+        body,
+        sentAt: new Date(),
+      });
+      await notification.save();
+      return { userId, response };
+    }));
+    res.json({ success: true, notifications });
   } catch (error) {
     res.status(500).json({ success: false, error: error.message });
   }
 };
+
 
 const getNotificationsByUserId = async (req, res) => {
   const userId = req.params.userId; // Extract userId from request parameters
