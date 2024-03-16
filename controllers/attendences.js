@@ -4,21 +4,33 @@ import Attendance from '../models/attendences.js';
 
 export const addAttendance = async (req, res) => {
     try {
-        // Logic to add attendance
-        const {advisorId, studentId, date, status } = req.body;
-        const attendance = new Attendance({
-            advisorId,
-            studentId,
-            date,
-            status
-        });
-        await attendance.save();
-        res.status(201).json({ message: 'Attendance added successfully' });
+        const { advisorId, studentId, date, status } = req.body;
+        
+        // Check if attendance already exists for the student on the given date
+        const existingAttendance = await Attendance.findOne({ studentId, date });
+        
+        if (existingAttendance) {
+            // If attendance already exists, update the status
+            existingAttendance.status = status;
+            await existingAttendance.save();
+            res.status(200).json({ message: 'Attendance updated successfully' });
+        } else {
+            // If attendance doesn't exist, create a new attendance record
+            const attendance = new Attendance({
+                advisorId,
+                studentId,
+                date,
+                status
+            });
+            await attendance.save();
+            res.status(201).json({ message: 'Attendance added successfully' });
+        }
     } catch (error) {
         console.error(error);
-        res.status(500).json({ message: 'Failed to add attendance' });
+        res.status(500).json({ message: 'Failed to add/update attendance' });
     }
 };
+
 
 export const updateAttendance = async (req, res) => {
     try {
