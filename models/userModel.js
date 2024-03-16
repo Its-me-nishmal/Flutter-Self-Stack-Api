@@ -35,7 +35,8 @@ const userSchema = new Schema({
     place: { type: String },
     educationQualification: { type: String },
     workExperience: { type: String },
-    address: { type: String }
+    address: { type: String },
+    notifyId: { type: String }
 }, { timestamps: true });
 
 userSchema.pre('save', async function (next) {
