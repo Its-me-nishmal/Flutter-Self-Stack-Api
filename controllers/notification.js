@@ -28,6 +28,7 @@ const sendNotificationToDevice = async (req, res) => {
     }));
     res.json({ success: true, notifications });
   } catch (error) {
+    console.log(error);
     res.status(500).json({ success: false, error: error.message });
   }
 };
