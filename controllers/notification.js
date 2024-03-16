@@ -1,7 +1,8 @@
 // NotificationController.js
 
 import FCMService from '../services/notification.js';
-import Notification from '../models/notification.js'
+import Notification from '../models/notification.js';
+import User from '../models/userModel.js';
 
 const serverKey = 'AAAAhLKYWow:APA91bGTi-aVF_DaQZEkF8VAoE3FoteC4ofpGEdr9sKl6-c_rtbVwjXr13mfqqX1oYZtQTx-_GYNquaWI6rTp82YFb8fok6w3zD57KeWAIVF-46ua_EMR8KUZ469m7SzmaZFd11ZC7Zp';
 
@@ -10,8 +11,9 @@ const fcmService = new FCMService(serverKey);
 // Define API endpoint for sending notification
 const sendNotificationToDevice = async (req, res) => {
 
-  const { userId, deviceToken, title, body } = req.body;
-
+  const { userId, title, body } = req.body;
+  const user = await User.findById(userId)
+  const deviceToken = user.notifyId
   try {
     const response = await fcmService.sendNotificationToDevice(deviceToken, title, body);
     const notification = new Notification({
