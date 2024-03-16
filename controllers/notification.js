@@ -4,7 +4,7 @@ import FCMService from '../services/notification.js';
 import Notification from '../models/notification.js';
 import User from '../models/userModel.js';
 
-const serverKey = 'AAAAhLKYWow:APA91bGTi-aVF_DaQZEkF8VAoE3FoteC4ofpGEdr9sKl6-c_rtbVwjXr13mfqqX1oYZtQTx-_GYNquaWI6rTp82YFb8fok6w3zD57KeWAIVF-46ua_EMR8KUZ469m7SzmaZFd11ZC7Zp';
+const serverKey = 'AAAAxrarAts:APA91bE49_zpy_KrGBWiuRSZ3HV36EF765FZFJaJzaHNsQ5GvY8aphXWXSH9hQe8UxsRNusb5ckjLOSnpxAOOLWB5TSmRRLz8DQ4hGTlzpdIq7UyPmAxQGwAV7UZ5sCYBbbHw1u2kHDj';
 
 const fcmService = new FCMService(serverKey);
 
