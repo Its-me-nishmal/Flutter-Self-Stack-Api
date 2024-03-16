@@ -9,7 +9,7 @@ const attendanceSchema = new Schema({
     default: () => `self-stack-attendences-${uuidv4()}`,
     unique: true,
   },
-    advisorId: { type: String, required: true },
+    advisorId: { type: String },
     studentId: { type: String, required: true },
     date: { type: Date, required: true, default: Date.now() },
     status: { type: String, enum: ['Present', 'Absent'], required: true }
