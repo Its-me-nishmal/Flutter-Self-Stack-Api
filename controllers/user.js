@@ -178,13 +178,33 @@ const userUpdate = async (req, res, next) => {
             return;
         }
 
-        // Remove user from existing courses
-        const userCourses = await CourseModel.find({ students: userId });
-        await Promise.all(userCourses.map(async (course) => {
-            await CourseModel.findByIdAndUpdate(course._id, {
-                $pull: { students: userId }
-            });
-        }));
+        if (req.body.domain && req.body.domain !== prevUser.domain) {
+            // Remove user from previous course (if any)
+            if (prevUser.domain) {
+                const prevCourse = await CourseModel.findById(prevUser.domain);
+                if (prevCourse) {
+                    await CourseModel.findByIdAndUpdate(prevCourse._id, {
+                        $pull: { students: userId }
+                    });
+                }
+            }
+            // Add user to the new course
+            const specificCourse = await CourseModel.findById(req.body.domain);
+            if (specificCourse) {
+                await CourseModel.findByIdAndUpdate(specificCourse._id, {
+                    $addToSet: { students: userId }
+                });
+
+                // Check if there are tasks in the course, and if yes, add the first task to started tasks
+                if (specificCourse.tasks.length > 0) {
+                    const firstTaskId = specificCourse.tasks[0]._id;
+                    await User.findByIdAndUpdate(userId, {
+                        $addToSet: { tasksStarted: { taskId: firstTaskId } }
+                    });
+                }
+            }
+        }
+        
         if (prevUser.batch && prevUser.batch !== updatedUser.batch) {
             await Batch.findByIdAndUpdate(prevUser.batch, { $pull: { studentIds: userId } });
         }
