@@ -34,7 +34,7 @@ const userSchema = new Schema({
     guardian: { type: String },
     place: { type: String },
     educationQualification: { type: String },
-    workExperience: { type: String },
+    workExperience: { type: String ,default: "None"},
     address: { type: String },
     notifyId: { type: String }
 }, { timestamps: true });
