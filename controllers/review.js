@@ -162,6 +162,7 @@ export const saveReview = async (req, res) => {
 
     res.status(201).json(savedReview); // Return the saved review
   } catch (error) {
+    console.log(error);
     res.status(500).json({ message: error.message });
   }
 };

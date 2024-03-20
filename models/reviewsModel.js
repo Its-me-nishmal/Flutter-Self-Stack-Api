@@ -7,7 +7,6 @@ const reviewSchema = new mongoose.Schema({
     },
     advisor: {
         type: String,
-        required: true
     },
     reviewver: {
         type: String,
