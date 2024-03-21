@@ -141,16 +141,25 @@ export const getReviewByIdAndStudent = async (req, res) => {
 // Create or update review task
 export const saveReview = async (req, res) => {
   try {
-    const { studentId, ...reviewData } = req.body; // Extract studentId and review data
+    const { studentId, ...reviewData } = req.body;
     let review;
 
     if (req.method === 'POST') {
-      // If it's a POST request, create a new review
       review = new ReviewTask({ ...reviewData, student: studentId });
     } else if (req.method === 'PUT') {
-      // If it's a PUT request, update the existing review
       const { reviewId } = req.params;
-      review = await ReviewTask.findByIdAndUpdate(reviewId, { ...reviewData, student: studentId }, { new: true });
+      let updateData = { ...reviewData, student: studentId };
+      
+      // Check if the status of review is 'Task Completed' or 'Need Improvement'
+      if (reviewData.reviewDetails && reviewData.reviewDetails.length > 0) {
+        const statusOfReview = reviewData.reviewDetails[0].status;
+        if (statusOfReview === 'Task Completed' || statusOfReview === 'Need Improvement') {
+          // Set the completedDate to current date if review status is 'Task Completed' or 'Need Improvement'
+          updateData.completedDate = Date.now();
+        }
+      }
+
+      review = await ReviewTask.findByIdAndUpdate(reviewId, updateData, { new: true });
       if (!review) {
         return res.status(404).json({ message: 'Review not found' });
       }
@@ -158,9 +167,8 @@ export const saveReview = async (req, res) => {
       return res.status(400).json({ message: 'Invalid request method' });
     }
 
-    const savedReview = await review.save(); // Save the review
-
-    res.status(201).json(savedReview); // Return the saved review
+    const savedReview = await review.save();
+    res.status(201).json(savedReview);
   } catch (error) {
     console.log(error);
     res.status(500).json({ message: error.message });
