@@ -80,7 +80,7 @@ const userGet = async (req, res, next) => {
             const reviewStatusMap = {};
             reviewStatusCounts.forEach(status => {
                 console.log(status)
-                if (status !== "Next Review") {
+                if (status._id[0] !== "Next Review") {
                     reviewStatusMap[status._id] = status.count;
                 }
             });
