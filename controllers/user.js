@@ -79,6 +79,7 @@ const userGet = async (req, res, next) => {
             // Create a map to store review status counts
             const reviewStatusMap = {};
             reviewStatusCounts.forEach(status => {
+                console.log(status)
                 if (status !== "Next Review") {
                     reviewStatusMap[status._id] = status.count;
                 }
