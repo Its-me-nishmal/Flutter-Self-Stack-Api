@@ -24,7 +24,7 @@ const taskGetAll = async (req, res, next) => {
         const tasksWithStudents = await Promise.all(tasks.map(async (task) => {
             const studentsDetails = await Promise.all(task.students.map(async (studentId) => {
                 // Assuming you have a StudentModel for fetching student details
-                const student = await StudentModel.findById(studentId);
+                const student = await User.findById(studentId);
                 return student;
             }));
             return { ...task.toObject(), students: studentsDetails };
