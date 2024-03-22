@@ -7,7 +7,7 @@ export const getAllBatches = async (req, res) => {
     try {
         const batches = await Batch.find().populate('studentIds');
         const allStudents = await User.find()
-    .sort({ _id:-1 })
+    .sort({ updatedAt: -1, createdAt: -1 })
     .exec();
 
 
