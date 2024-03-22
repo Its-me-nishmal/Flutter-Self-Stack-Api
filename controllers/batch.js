@@ -6,7 +6,10 @@ import User from '../models/userModel.js';
 export const getAllBatches = async (req, res) => {
     try {
         const batches = await Batch.find().populate('studentIds');
-        const allStudents = await User.find().sort({ _id: -1 })
+        const allStudents = await User.find()
+    .sort({ _id:-1 })
+    .exec();
+
 
         const batchesWithStudents = batches.map((batch, index) => {
             if (index === 0) {
