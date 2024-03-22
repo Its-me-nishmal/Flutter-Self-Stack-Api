@@ -79,8 +79,11 @@ const userGet = async (req, res, next) => {
             // Create a map to store review status counts
             const reviewStatusMap = {};
             reviewStatusCounts.forEach(status => {
-                reviewStatusMap[status._id] = status.count;
+                if (status._id !== "Next Review") {
+                    reviewStatusMap[status._id] = status.count;
+                }
             });
+            
 
             user.batch = batchDta ? batchDta.name : null;
 
