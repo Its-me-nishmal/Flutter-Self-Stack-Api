@@ -34,9 +34,6 @@ const reviewSchema = new mongoose.Schema({
                     required: true
                 }
             }
-        ],
-        default: [
-            { status: 'scheduled', color: 'blue' }
         ]
     },
     pendingTopics: {
