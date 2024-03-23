@@ -14,7 +14,7 @@ export const addAttendance = async (req, res) => {
             // If attendance already exists, update the status
             existingAttendance.status = status;
             await existingAttendance.save();
-            res.status(200).json({ message: 'Attendance updated successfully' });
+            res.status(201).json({ message: 'Attendance updated successfully' });
         } else {
             // If attendance doesn't exist, create a new attendance record
             const attendance = new Attendance({
