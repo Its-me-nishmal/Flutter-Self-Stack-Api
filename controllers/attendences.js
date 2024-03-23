@@ -5,9 +5,10 @@ import Attendance from '../models/attendences.js';
 export const addAttendance = async (req, res) => {
     try {
         const { advisorId, studentId, date, status } = req.body;
+        const dateOnly = new Date(date).toISOString().split('T')[0];
+        const existingAttendance = await Attendance.findOne({ studentId, date: { $gte: dateOnly, $lt: new Date(dateOnly).setDate(new Date(dateOnly).getDate() + 1) } });
         
-        // Check if attendance already exists for the student on the given date
-        const existingAttendance = await Attendance.findOne({ studentId, date });
+        
         
         if (existingAttendance) {
             // If attendance already exists, update the status
