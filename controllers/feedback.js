@@ -20,7 +20,8 @@ export const postFeedback = async (req, res) => {
 export const getfeedback = async (req, res) => {
     try {
         // Fetch all feedback documents
-        const feedbacks = await Feedback.find();
+        const feedbacks = await Feedback.find().sort({ createdAt: -1 });
+
 
         // Fetch task names for each feedback
         const formattedFeedbacks = await Promise.all(feedbacks.map(async feedback => {
