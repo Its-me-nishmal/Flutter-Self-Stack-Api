@@ -115,7 +115,7 @@ export const deleteBatch = async (req, res) => {
         if (!batch) {
             return res.status(404).json({ error: 'Batch not found' }); // If batch not found, return 404 error
         }
-        await batch.remove(); // Remove the batch
+        await Batch.deleteOne(batch)
         return res.status(200).json({ message: 'Batch deleted successfully' }); // Return success message
     } catch (error) {
         console.log(error);
