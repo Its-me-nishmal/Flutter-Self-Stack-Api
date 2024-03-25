@@ -1,5 +1,7 @@
 // controllers/feedbackController.js
 import Feedback from "../models/feedbackModel.js";
+import User from "../models/userModel.js";
+import { CourseModel } from "../models/taskModel.js";
 
 export const postFeedback = async (req, res) => {
     try {
@@ -16,10 +18,30 @@ export const postFeedback = async (req, res) => {
 };
 
 export const getfeedback = async (req, res) => {
-        try {
-            const feedbacks = await Feedback.find();
-            res.json(feedbacks);
-        } catch (err) {
-            res.status(500).json({ message: err.message });
-        }
+    try {
+        const feedbacks = await Feedback.find()
+            .populate({
+                path: 'userId',
+                model: User,
+                select: 'name' // Select only the 'name' field from the User model
+            })
+            .populate({
+                path: 'taskId',
+                model: CourseModel,
+                select: 'name' // Select only the 'name' field from the Task model
+            });
+
+        // Map feedback data, user name, and task name
+        const formattedFeedbacks = feedbacks.map(feedback => ({
+            _id: feedback._id,
+            userId: feedback.userId.name,
+            taskId: feedback.taskId.name,
+            content: feedback.content,
+            date: feedback.date
+        }));
+
+        res.json(formattedFeedbacks);
+    } catch (err) {
+        res.status(500).json({ message: err.message });
     }
+}
