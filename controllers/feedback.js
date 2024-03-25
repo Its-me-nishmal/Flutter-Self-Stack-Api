@@ -25,7 +25,7 @@ export const getfeedback = async (req, res) => {
         // Fetch task names for each feedback
         const formattedFeedbacks = await Promise.all(feedbacks.map(async feedback => {
             // Find the course associated with the feedback
-            const course = await CourseModel.findOne({ tasks: feedback.taskId });
+            const course = await CourseModel.findById({ tasks: feedback.taskId });
 
             let taskName = 'Unknown Task';
             // If course is found, find the task within it
