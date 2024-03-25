@@ -1,7 +1,7 @@
 // controllers/feedbackController.js
 import Feedback from "../models/feedbackModel.js";
 import User from "../models/userModel.js";
-import { CourseModel } from "../models/taskModel.js";
+import { TaskModel } from "../models/taskModel.js";
 
 export const postFeedback = async (req, res) => {
     try {
@@ -27,8 +27,8 @@ export const getfeedback = async (req, res) => {
             })
             .populate({
                 path: 'taskId',
-                model: Task,
-                select: 'name' // Select only the 'name' field from the Task model
+                model: TaskModel,
+                select: 'task_name' // Select only the 'name' field from the Task model
             });
 
         // Map feedback data, user name, and task name
