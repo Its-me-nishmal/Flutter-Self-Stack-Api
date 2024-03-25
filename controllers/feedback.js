@@ -35,7 +35,7 @@ export const getfeedback = async (req, res) => {
         const formattedFeedbacks = feedbacks.map(feedback => ({
             _id: feedback._id,
             userId: feedback.userId ? feedback.userId.name : 'Unknown User',
-            taskId: feedback.taskId ? feedback.taskId.name : 'Unknown Task',
+            taskId: feedback.taskId ? feedback.taskId.task_name : 'Unknown Task',
             content: feedback.content,
             date: feedback.date
         }));
