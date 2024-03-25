@@ -1,10 +1,10 @@
 import express from 'express';
-import { postFeedback } from '../controllers/feedback.js';
+import { getfeedback, postFeedback } from '../controllers/feedback.js';
 
 const router = express.Router();
 
 router.post('/', postFeedback);
-
+router.get('/', getfeedback)
 
 
 export default router;
