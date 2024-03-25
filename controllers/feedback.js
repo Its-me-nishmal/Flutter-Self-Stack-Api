@@ -1,7 +1,7 @@
 // controllers/feedbackController.js
 import Feedback from "../models/feedbackModel.js";
 import User from "../models/userModel.js";
-import { TaskModel } from "../models/taskModel.js";
+import { CourseModel } from "../models/taskModel.js";
 
 export const postFeedback = async (req, res) => {
     try {
@@ -22,21 +22,22 @@ export const getfeedback = async (req, res) => {
         // Fetch all feedback documents
         const feedbacks = await Feedback.find();
 
-        // Fetch related user and task documents for each feedback
+        // Fetch task names for each feedback
         const formattedFeedbacks = await Promise.all(feedbacks.map(async feedback => {
-            // Fetch user document
-            const user = await User.findById(feedback.userId).select('name');
+            // Find the course associated with the feedback
+            const course = await CourseModel.findOne({ tasks: feedback.taskId });
 
-            // Fetch task document
-            let taskName = 'No Task'; // Default value if task not found
-            if (feedback.taskId) {
-                const task = await TaskModel.findById(feedback.taskId).select('task_name');
+            let taskName = 'Unknown Task';
+            // If course is found, find the task within it
+            if (course) {
+                const task = course.tasks.find(task => task._id === feedback.taskId);
                 if (task) {
                     taskName = task.task_name;
-                } else {
-                    taskName = 'not found'
                 }
             }
+
+            // Fetch user associated with the feedback
+            const user = await User.findById(feedback.userId);
 
             // Construct formatted feedback object
             return {
