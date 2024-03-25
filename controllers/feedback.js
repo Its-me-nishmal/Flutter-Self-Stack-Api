@@ -37,7 +37,9 @@ export const getfeedback = async (req, res) => {
             }
 
             // Fetch user associated with the feedback
-            const user = await User.findById(feedback.userId);
+            // Fetch user associated with the feedback
+const user = await User.findOne({ _id: feedback.userId });
+
 
             // Construct formatted feedback object
             return {
