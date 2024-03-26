@@ -102,7 +102,7 @@ export const getAllBatchesWithTodayAttendance = async (req, res) => {
         const batches = await Batch.find().populate('studentIds');
         const allStudents = await User.find().sort({ updatedAt: -1, createdAt: -1 }).exec();
 
-        const batchesWithAttendance = await Promise.all(batches.map(async (batch) => {
+        const batchesWithAttendance = await Promise.all(batches.map(async (batch, index) => {
             const batchObj = {
                 id: batch._id,
                 name: batch.name,
@@ -110,18 +110,30 @@ export const getAllBatchesWithTodayAttendance = async (req, res) => {
                 students: []
             };
 
-            for (const student of batch.studentIds) {
-                const attendanceRecord = await Attendance.findOne({
-                    studentId: student._id,
-                    date: { $gte: today, $lt: tomorrow }
-                });
-                if (attendanceRecord) {
-                    const studentObj = {
+            if (index === 0) {
+                // For the first batch, include all students
+                allStudents.forEach((student) => {
+                    batchObj.students.push({
                         id: student._id,
                         name: student.name,
-                        attendance: attendanceRecord
-                    };
-                    batchObj.students.push(studentObj);
+                        attendance: null // Set attendance to null for all students in the first batch
+                    });
+                });
+            } else {
+                // For other batches, include attendance records for each student
+                for (const student of batch.studentIds) {
+                    const attendanceRecord = await Attendance.findOne({
+                        studentId: student._id,
+                        date: { $gte: today, $lt: tomorrow }
+                    });
+                    if (attendanceRecord) {
+                        const studentObj = {
+                            id: student._id,
+                            name: student.name,
+                            attendance: attendanceRecord
+                        };
+                        batchObj.students.push(studentObj);
+                    }
                 }
             }
 
