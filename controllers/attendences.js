@@ -112,13 +112,18 @@ export const getAllBatchesWithTodayAttendance = async (req, res) => {
 
             if (index === 0) {
                 // For the first batch, include all students
-                allStudents.forEach((student) => {
-                    batchObj.students.push({
+                const studentAttendancePromises = allStudents.map(async (student) => {
+                    const attendanceRecord = await Attendance.findOne({
+                        studentId: student._id,
+                        date: { $gte: today, $lt: tomorrow }
+                    });
+                    return {
                         id: student._id,
                         name: student.name,
-                        attendance: null // Set attendance to null for all students in the first batch
-                    });
+                        attendance: attendanceRecord // Set attendance to null for all students in the first batch
+                    };
                 });
+                batchObj.students = await Promise.all(studentAttendancePromises);
             } else {
                 // For other batches, include attendance records for each student
                 for (const student of batch.studentIds) {
