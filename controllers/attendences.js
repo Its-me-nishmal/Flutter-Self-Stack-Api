@@ -1,6 +1,8 @@
 // attendanceController.js
 
 import Attendance from '../models/attendences.js';
+import Batch from '../models/batch.js'
+import User from '../models/userModel.js';
 
 export const addAttendance = async (req, res) => {
     try {
@@ -86,5 +88,48 @@ export const updateMultipleAttendance = async (req, res) => {
     } catch (error) {
         console.error(error);
         res.status(500).json({ message: 'Failed to update attendance' });
+    }
+};
+
+
+export const getAllBatchesWithTodayAttendance = async (req, res) => {
+    try {
+        const today = new Date();
+        today.setHours(0, 0, 0, 0); // Set time to the beginning of the day
+        const tomorrow = new Date(today);
+        tomorrow.setDate(tomorrow.getDate() + 1); // Get tomorrow's date
+
+        const batches = await Batch.find().populate('studentIds');
+        const allStudents = await User.find().sort({ updatedAt: -1, createdAt: -1 }).exec();
+
+        const batchesWithAttendance = await Promise.all(batches.map(async (batch) => {
+            const batchObj = {
+                id: batch._id,
+                name: batch.name,
+                startDate: batch.startDate,
+                students: []
+            };
+
+            for (const student of batch.studentIds) {
+                const attendanceRecord = await Attendance.findOne({
+                    studentId: student._id,
+                    date: { $gte: today, $lt: tomorrow }
+                });
+                if (attendanceRecord) {
+                    const studentObj = {
+                        id: student._id,
+                        name: student.name,
+                        attendance: attendanceRecord
+                    };
+                    batchObj.students.push(studentObj);
+                }
+            }
+
+            return batchObj;
+        }));
+
+        return res.status(200).json({ batches: batchesWithAttendance });
+    } catch (error) {
+        return res.status(500).json({ error: 'Error retrieving batches and today\'s attendance records' });
     }
 };

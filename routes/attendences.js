@@ -1,6 +1,6 @@
 // attendanceRoutes.js
 import express from 'express';
-import { addAttendance, addMultipleAttendance, updateAttendance, getAttendanceByStudentId,updateMultipleAttendance  } from '../controllers/attendences.js';
+import { addAttendance,getAllBatchesWithTodayAttendance, addMultipleAttendance, updateAttendance, getAttendanceByStudentId,updateMultipleAttendance  } from '../controllers/attendences.js';
 
 const router = express.Router();
 
@@ -10,5 +10,6 @@ router.get('/attendance/:studentId', getAttendanceByStudentId);
 router.get('/attendance/:studentId', getAttendanceByStudentId);
 router.post('/attendance/multiple', addMultipleAttendance);
 router.put('/attendance/multiple', updateMultipleAttendance); 
+router.get('/batchwise', getAllBatchesWithTodayAttendance)
 
 export default router;
