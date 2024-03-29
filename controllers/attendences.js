@@ -117,10 +117,19 @@ export const getAllBatchesWithTodayAttendance = async (req, res) => {
                         studentId: student._id,
                         date: { $gte: today, $lt: tomorrow }
                     });
+                    let ok = {}
+                    if (attendanceRecord) {
+                        ok = attendanceRecord
+                    } else {
+                        ok = {
+                            status:'offline'
+                        }
+                    }
+                    
                     return {
                         id: student._id,
                         name: student.name,
-                        attendance: attendanceRecord // Set attendance to null for all students in the first batch
+                        attendance:ok  // Set attendance to null for all students in the first batch
                     };
                 });
                 batchObj.students = await Promise.all(studentAttendancePromises);
