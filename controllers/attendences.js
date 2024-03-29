@@ -138,6 +138,15 @@ export const getAllBatchesWithTodayAttendance = async (req, res) => {
                             attendance: attendanceRecord
                         };
                         batchObj.students.push(studentObj);
+                    } else {
+                        const studentObj = {
+                            id: student._id,
+                            name: student.name,
+                            attendance: {
+                                status:"offline"
+                            }
+                        };
+                        batchObj.students.push(studentObj);
                     }
                 }
             }
