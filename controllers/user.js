@@ -450,6 +450,53 @@ const loginWithGoogle = async (req, res, next) => {
     }
 };
 
+const loginWithGitHub = async (req, res, next) => {
+    try {
+        const { code } = req.body;
+        const clientId = 'your_github_client_id';
+        const clientSecret = 'your_github_client_secret';
+        const redirectUri = 'http://localhost:3000/auth/github/callback';
+
+        // Exchange the received code for an access token
+        const tokenResponse = await axios.post('https://github.com/login/oauth/access_token', {
+            client_id: clientId,
+            client_secret: clientSecret,
+            code: code,
+            redirect_uri: redirectUri
+        }, {
+            headers: {
+                'Accept': 'application/json'
+            }
+        });
+
+        const accessToken = tokenResponse.data.access_token;
+
+        // Use the access token to fetch user data from GitHub
+        const userResponse = await axios.get('https://api.github.com/user', {
+            headers: {
+                'Authorization': `token ${accessToken}`
+            }
+        });
+
+        const { email, name, id: githubId } = userResponse.data;
+
+        // Check if the user exists in your database
+        let existingUser = await User.findOne({ email });
+
+        if (!existingUser) {
+            // If the user doesn't exist, create a new user with GitHub data
+            const newUser = new User({ email, name, githubId });
+            existingUser = await newUser.save();
+        }
+
+        // Return the user data
+        res.status(OK).json(existingUser);
+    } catch (error) {
+        console.error(error);
+        next(error);
+    }
+};
+
 export default {
     userGet,
     userGetAll,
