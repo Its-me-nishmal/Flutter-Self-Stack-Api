@@ -275,7 +275,7 @@ const signIn = async (req, res, next) => {
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid username or password' });
         }
-        if(user.domain == 'No') {
+        if(user.domain == 'No' && user.roll == 'Student') {
             await sendReg(email)
         }
 
@@ -439,7 +439,7 @@ const loginWithGoogle = async (req, res, next) => {
         if (!existingUser) {
             const newUser = new User({ email, name, googleId, image });
             const savedUser = await newUser.save();
-            if(savedUser.domain == 'No') {
+            if(savedUser.domain == 'No' && updatedUser.roll == 'Student') {
                 await sendReg(email)
             }
             res.status(OK).json(savedUser);
@@ -448,7 +448,7 @@ const loginWithGoogle = async (req, res, next) => {
             existingUser.googleId = googleId;
             existingUser.image = image;
             const updatedUser = await existingUser.save();
-            if(updatedUser.domain == 'No') {
+            if(updatedUser.domain == 'No' && updatedUser.roll == 'Student') {
                 await sendReg(email)
             }
 
