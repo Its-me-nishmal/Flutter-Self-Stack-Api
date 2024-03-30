@@ -18,6 +18,7 @@ const { OK, INTERNAL_SERVER_ERROR } = httpStatus;
 
 import fs from 'fs';
 import path from 'path';
+import { serialize } from 'v8';
 
 const userGet = async (req, res, next) => {
     try {
@@ -149,7 +150,7 @@ const userCreate = async (req, res, next) => {
         // If the email doesn't exist, create a new user
         const newUser = new User({ ...req.body });
         const savedUser = await newUser.save();
-        await sendReg(email)
+       
 
         // Return the newly created user
         res.status(200).json(savedUser);
@@ -273,6 +274,9 @@ const signIn = async (req, res, next) => {
 
         if (!isPasswordValid) {
             return res.status(401).json({ error: 'Invalid username or password' });
+        }
+        if(user.domain == 'No') {
+            await sendReg(email)
         }
 
         const token = jwt.sign({ userId: user._id, userRoll: user.roll }, 'this-for-self-stack-api', { expiresIn: '1h' })
@@ -435,13 +439,18 @@ const loginWithGoogle = async (req, res, next) => {
         if (!existingUser) {
             const newUser = new User({ email, name, googleId, image });
             const savedUser = await newUser.save();
-
+            if(savedUser.domain == 'No') {
+                await sendReg(email)
+            }
             res.status(OK).json(savedUser);
         } else {
             existingUser.name = name;
             existingUser.googleId = googleId;
             existingUser.image = image;
             const updatedUser = await existingUser.save();
+            if(updatedUser.domain == 'No') {
+                await sendReg(email)
+            }
 
             res.status(OK).json(updatedUser);
         }
