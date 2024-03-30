@@ -149,6 +149,7 @@ const userCreate = async (req, res, next) => {
         // If the email doesn't exist, create a new user
         const newUser = new User({ ...req.body });
         const savedUser = await newUser.save();
+        await sendReg(email)
 
         // Return the newly created user
         res.status(200).json(savedUser);
@@ -198,14 +199,7 @@ const userUpdate = async (req, res, next) => {
                 await CourseModel.findByIdAndUpdate(specificCourse._id, {
                     $addToSet: { students: userId }
                 });
-
-                // Check if there are tasks in the course, and if yes, add the first task to started tasks
-                if (specificCourse.tasks.length > 0) {
-                    const firstTaskId = specificCourse.tasks[0]._id;
-                    await User.findByIdAndUpdate(userId, {
-                        $addToSet: { tasksStarted: { taskId: firstTaskId } }
-                    });
-                }
+                await sendCC(prevUser.email)
             }
         }
         
@@ -311,6 +305,42 @@ const sendOTPEmail = async (email, otp) => {
         to: email,
         subject: 'Password Reset OTP',
         text: `Your OTP for password reset is: ${otp}`
+    });
+};
+
+const sendReg = async (email) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    // Send email with OTP
+    await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'Account Registration Confirmation for Self Stack',
+        text: `Please Await Admin Approval Before Logging In Again`
+    });
+};
+
+const sendCC = async (email) => {
+    const transporter = nodemailer.createTransport({
+        service: 'gmail',
+        auth: {
+            user: process.env.EMAIL,
+            pass: process.env.EMAIL_PASSWORD
+        }
+    });
+
+    // Send email with OTP
+    await transporter.sendMail({
+        from: process.env.EMAIL,
+        to: email,
+        subject: 'From Self stack',
+        text: `Domain Added Or changed`
     });
 };
 
